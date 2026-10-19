@@ -29,7 +29,7 @@ notes/                                       수업 메모 원본 — 로컬 전
 ## 새 글 쓰기
 
 ```sh
-hugo new content posts/2026-10-24-week-02/index.md
+hugo new content posts/2026-10-24-week-02   # 끝에 /index.md를 붙이지 않는다
 ```
 
 `data/teams.yaml`에서 `active: true`인 팀마다 섹션이 자동으로 들어갑니다. 그 주에 쉰 팀은 지워 주세요.

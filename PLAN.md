@@ -172,7 +172,7 @@
 2. 슬래시 명령 `.claude/commands/weekly-post.md`
    1. 수업 날짜, 이번 주 참여한 팀, 메모 위치(`notes/YYYY-MM-DD.md`, 한 파일 안 팀별 제목 또는 `notes/YYYY-MM-DD-<team-id>.md`)를 확인한다.
    2. `post/week-NN` 브랜치를 만든다.
-   3. `hugo new content posts/YYYY-MM-DD-week-NN/index.md`로 글 폴더를 만든다.
+   3. `hugo new content posts/YYYY-MM-DD-week-NN`로 글 폴더를 만든다.
    4. 메모를 바탕으로 CLAUDE.md 규칙에 맞춰 본문을 쓴다. (`draft: true`)
    5. **`/humanize-korean`으로 윤문한다.**
    6. 사진은 `tools/strip-metadata.sh`, 영상은 `tools/clip.sh`로 처리한다.
@@ -193,7 +193,7 @@
 **브랜치:** `feature/naver-summary`
 
 ### 작업
-1. 글 폴더에 `naver.md`를 둔다. `hugo.yaml`에 `ignoreFiles: ['naver\.md$']`를 추가해 사이트에 나오지 않게 한다.
+1. 글 폴더에 `naver.md`를 둔다. 페이지 번들 리소스라 사이트에 따로 게시되지 않는다. (`ignoreFiles`는 `hugo new content`가 오류로 끝나게 만들어 쓰지 않는다. PR check에서 빌드 결과에 요약본이 없는지 검사한다)
 2. 템플릿
    - 제목: GitHub 글과 같다.
    - 본문: 핵심 3~4줄(공통), 팀마다 「연구원들의 한마디」 1개, 대표 이미지 1장 위치 표시

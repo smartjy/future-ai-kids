@@ -29,7 +29,7 @@
 - 새 글은 `hugo new content posts/YYYY-MM-DD-week-NN`(끝에 `/index.md`를 붙이지 않는다)로 만들고 `draft: true`로 시작한다. 글 폴더에 `index.md`와 `naver.md`가 함께 생긴다. `/index.md`까지 쓰면 번들 아키타입이 적용되지 않아 제목이 틀리고 `naver.md`도 생기지 않는다.
 
 ## 네이버 블로그 요약본
-- 글 폴더의 `naver.md`가 네이버 블로그용 요약본이다. `hugo.yaml`의 `ignoreFiles`로 사이트 빌드에서 빠진다.
+- 글 폴더의 `naver.md`가 네이버 블로그용 요약본이다. 글 폴더(페이지 번들) 안의 리소스라 사이트에 따로 게시되지 않는다. PR check가 빌드 결과에 요약본이 없는지 확인한다. (`ignoreFiles`로 빼면 `hugo new content`가 오류로 끝나서 쓰지 않는다)
 - 네이버에는 전문을 복사하지 않는다. 유사 문서로 판단되면 노출이 줄어든다. 제목(GitHub 글과 같게), 핵심 3~4줄, 팀마다 「연구원들의 한마디」 1개, 대표 이미지 1장 위치만 담는다.
 - 마지막 줄은 `전체 기록 보기 → https://smartjy.github.io/future-ai-kids/posts/<slug>/`로 둔다. 링크는 바꾸지 않는다.
 - GitHub에 먼저 발행한 뒤 네이버에 올린다. (링크가 살아 있어야 한다)

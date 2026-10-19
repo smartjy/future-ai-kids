@@ -6,8 +6,6 @@ title: 미래AI육성 캠프
 theme: PaperMod
 enableRobotsTXT: true
 enableEmoji: true
-# 글 폴더의 naver.md(네이버 블로그 요약본)는 사이트에 내보내지 않는다.
-ignoreFiles: ['naver\.md$']
 
 pagination:
   pagerSize: 10
