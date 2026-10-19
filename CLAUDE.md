@@ -33,6 +33,22 @@
 - front matter, shortcode, 이미지 경로, 링크, 팀 별칭, 「연구원 A」 호칭은 바꾸지 않는다. 윤문 뒤 `git diff`로 확인하고 깨졌으면 되돌린다.
 - 스킬이 만드는 `_workspace/`는 커밋하지 않는다.
 
+## 영상 규칙
+- 얼굴이 나오지 않는 영상만 쓴다. (위에서 내려다본 손·화면 구도, 화면 녹화)
+- blur는 보조 수단이다. 얼굴이 움직이며 나오는 장면은 쓰지 않는다.
+- 소리는 항상 제거한다. (`tools/clip.sh`가 `-an`으로 뺀다)
+- 화면 속 계정 이름, 알림, 프로필 사진, 이름표, 유리·모니터 반사를 확인한다.
+- 4초 이하는 GIF, 그보다 길면 MP4를 쓴다. 쓰지 않는 결과물은 지운다.
+- 원본 영상은 `notes/` 또는 레포 밖에만 둔다. 글 폴더에는 `tools/clip.sh` 결과물(mp4/gif/jpg)만 넣는다.
+- 본문에는 `{{< clip src="app-demo.mp4" alt="퀴즈 앱이 점수를 올리는 장면" >}}`로 넣는다. `alt`는 필수다.
+
+```sh
+# 좌표 잡기: 시작 프레임만 레포 밖 임시 폴더에 저장 (원본 크기도 출력)
+./tools/clip.sh "notes/1주차 수업.mp4" 01:05 6 content/posts/2026-10-24-week-02 app-demo --preview
+# 결과물 만들기: crop 먼저, blur 좌표는 crop 뒤 화면 기준
+./tools/clip.sh "notes/1주차 수업.mp4" 01:05 6 content/posts/2026-10-24-week-02 app-demo --crop 1280:600:0:120 --blur 200:80:1000:20
+```
+
 ## 빌드 확인
 - `hugo --gc --minify --printPathWarnings`가 경고 없이 끝나야 한다.
 - 초안 확인: `hugo server --buildDrafts`
