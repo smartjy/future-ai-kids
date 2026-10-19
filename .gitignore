@@ -36,3 +36,6 @@ Thumbs.db
 .idea/
 *.swp
 *~
+
+# ── Claude Code 병렬 작업용 worktree ──
+.claude/worktrees/
