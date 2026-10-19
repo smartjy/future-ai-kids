@@ -54,4 +54,18 @@ hugo new content posts/2026-10-24-week-02/index.md
 
 ## 배포
 
-GitHub Pages(GitHub Actions)로 배포합니다. `main`에 머지되면 자동으로 올라갑니다. 워크플로와 저장소 설정 방법은 Phase 2에서 추가됩니다.
+GitHub Pages(GitHub Actions)로 배포합니다. `main`에 머지되면 `.github/workflows/deploy.yml`이 사이트를 빌드해 https://smartjy.github.io/future-ai-kids/ 에 올립니다.
+
+- 빌드: Hugo 0.168.0 extended (공식 릴리스 tarball), `hugo --gc --minify`
+- `draft: true`인 글은 배포 빌드에 들어가지 않습니다. 초안은 PR check(`--buildDrafts`)에서만 빌드를 확인합니다.
+- 다시 배포하려면 Actions 탭 → **Deploy to GitHub Pages** → **Run workflow**를 누릅니다.
+- 사용하는 Actions는 GitHub 공식 액션만 쓰고 커밋 SHA로 고정합니다. 버전을 올릴 때는 태그와 SHA를 함께 바꿉니다.
+
+### 저장소 설정 (사람이 한 번 직접)
+
+1. **Settings → Pages → Build and deployment → Source: GitHub Actions**
+2. **Settings → Branches → Add branch protection rule** (또는 Rulesets)에서 `main`을 보호합니다.
+   - Require a pull request before merging (PR 필수)
+   - Require status checks to pass before merging → `build` (PR check) 선택
+   - Allow force pushes 끄기 (force push 금지)
+   - Allow deletions 끄기
