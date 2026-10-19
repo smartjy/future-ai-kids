@@ -36,6 +36,13 @@
 - 이미지는 네이버 에디터에서 직접 업로드한다. `naver.md`에는 `[대표 이미지: 파일명 — 네이버 에디터에서 직접 업로드]` 표시만 남긴다.
 - `naver.md`도 작성 직후와 네이버 업로드 직전에 `/humanize-korean`을 실행한다.
 
+## 주간 글쓰기 (/weekly-post)
+- 매주 글은 `/weekly-post [YYYY-MM-DD]`로 쓴다. 자세한 단계는 `.claude/commands/weekly-post.md`에 있다.
+- 흐름: 날짜·참여 팀·메모 확인 → `main`에서 `post/week-NN` 브랜치 → `hugo new content` → 본문 초안 → `/humanize-korean` → 사진(`tools/strip-metadata.sh`)·영상(`tools/clip.sh`) → `tools/privacy-check.sh` → `naver.md` → `privacy-reviewer` → 사람 확인 후 push·PR
+- 메모는 `notes/YYYY-MM-DD.md`(팀별 제목) 또는 `notes/YYYY-MM-DD-<team-id>.md`, 미디어 원본은 `notes/YYYY-MM-DD/`에 둔다. 메모 예시는 `notes.example/`에 있다.
+- 실명과 「연구원 A」 대응표는 대화 안에서만 쓰고 어떤 파일에도 남기지 않는다.
+- 발행은 사람이 `hugo server --buildDrafts`로 확인한 뒤, 윤문과 `privacy-reviewer`를 한 번 더 거쳐 `draft: false`로 바꾸고 사람이 머지한다.
+
 ## 문체 다듬기 (humanize-korean)
 - 초안 작성 직후, 그리고 `draft: false`로 바꾸기 직전에 `/humanize-korean`을 실행해 AI 티를 없앤다. 네이버 요약본도 같다.
 - front matter, shortcode, 이미지 경로, 링크, 팀 별칭, 「연구원 A」 호칭은 바꾸지 않는다. 윤문 뒤 `git diff`로 확인하고 깨졌으면 되돌린다.
