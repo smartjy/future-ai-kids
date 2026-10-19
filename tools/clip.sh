@@ -159,7 +159,7 @@ echo "$DURATION" | grep -Eq '^([0-9]+(\.[0-9]*)?|\.[0-9]+)$' ||
 awk -v d="$DURATION" 'BEGIN { exit !(d > 0) }' || die "길이는 0보다 커야 합니다: $DURATION"
 
 if [ "$PREVIEW" -eq 0 ]; then
-  [ -d "$POST_DIR" ] || die "글 폴더가 없습니다: $POST_DIR (먼저 'hugo new content posts/YYYY-MM-DD-week-NN/index.md'로 만드세요)"
+  [ -d "$POST_DIR" ] || die "글 폴더가 없습니다: $POST_DIR (먼저 README의 「새 글 쓰기」대로 hugo new content로 만드세요)"
 fi
 
 # 이름: 생략하면 원본 파일 이름을 소문자 슬러그로 바꾼다. (한글·공백 등은 '-'로)
