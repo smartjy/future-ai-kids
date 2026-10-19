@@ -22,11 +22,19 @@
 
 ## 글쓰기 규칙
 - 아이들 눈높이의 따뜻하고 담백한 톤으로 쓴다. 과장하지 않는다.
-- `archetypes/posts.md` 구조를 유지한다: 이번 주 주제 → 오늘의 수업 흐름 → 팀별 섹션 → 다음 주 예고
+- `archetypes/posts/index.md` 구조를 유지한다: 이번 주 주제 → 오늘의 수업 흐름 → 팀별 섹션 → 다음 주 예고
 - 한 주에 글 하나, 그 주에 참여한 팀을 모두 한 글에 담는다. 쉰 팀은 섹션과 front matter `teams`에서 뺀다.
 - 팀 이름은 `data/teams.yaml`의 별칭(`name`)만 쓴다.
 - 아이 호칭은 「<팀 별칭> 연구원 A/B/C」로 쓴다. 메모에 실명이 있으면 이렇게 바꾸고, 바꾼 사실은 PR 설명에만 남긴다. (실명 자체는 PR에도 쓰지 않는다)
-- 새 글은 `hugo new content posts/YYYY-MM-DD-week-NN/index.md`로 만들고 `draft: true`로 시작한다.
+- 새 글은 `hugo new content posts/YYYY-MM-DD-week-NN`(끝에 `/index.md`를 붙이지 않는다)로 만들고 `draft: true`로 시작한다. 글 폴더에 `index.md`와 `naver.md`가 함께 생긴다. `/index.md`까지 쓰면 번들 아키타입이 적용되지 않아 제목이 틀리고 `naver.md`도 생기지 않는다.
+
+## 네이버 블로그 요약본
+- 글 폴더의 `naver.md`가 네이버 블로그용 요약본이다. `hugo.yaml`의 `ignoreFiles`로 사이트 빌드에서 빠진다.
+- 네이버에는 전문을 복사하지 않는다. 유사 문서로 판단되면 노출이 줄어든다. 제목(GitHub 글과 같게), 핵심 3~4줄, 팀마다 「연구원들의 한마디」 1개, 대표 이미지 1장 위치만 담는다.
+- 마지막 줄은 `전체 기록 보기 → https://smartjy.github.io/future-ai-kids/posts/<slug>/`로 둔다. 링크는 바꾸지 않는다.
+- GitHub에 먼저 발행한 뒤 네이버에 올린다. (링크가 살아 있어야 한다)
+- 이미지는 네이버 에디터에서 직접 업로드한다. `naver.md`에는 `[대표 이미지: 파일명 — 네이버 에디터에서 직접 업로드]` 표시만 남긴다.
+- `naver.md`도 작성 직후와 네이버 업로드 직전에 `/humanize-korean`을 실행한다.
 
 ## 문체 다듬기 (humanize-korean)
 - 초안 작성 직후, 그리고 `draft: false`로 바꾸기 직전에 `/humanize-korean`을 실행해 AI 티를 없앤다. 네이버 요약본도 같다.
