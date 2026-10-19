@@ -41,7 +41,7 @@ git switch -c post/week-NN
 ## 3. 글 폴더 만들기
 
 ```bash
-hugo new content posts/YYYY-MM-DD-week-NN/index.md
+hugo new content posts/YYYY-MM-DD-week-NN
 ```
 
 - `content/posts/YYYY-MM-DD-week-NN/index.md`가 `draft: true`로 생긴다. 번들 아키타입이면 같은 폴더에 `naver.md`도 함께 생긴다.
