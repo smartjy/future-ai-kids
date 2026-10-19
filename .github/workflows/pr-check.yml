@@ -23,3 +23,9 @@ jobs:
           hugo version
       - name: Build (drafts 포함)
         run: hugo --gc --minify --buildDrafts --printPathWarnings --panicOnWarning
+      - name: Install exiftool, ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libimage-exiftool-perl ffmpeg
+      - name: 개인정보 검사 (GPS·크기·오디오, 금지어는 로컬 전용)
+        run: tools/privacy-check.sh content data

@@ -50,7 +50,29 @@ hugo new content posts/2026-10-24-week-02/index.md
 2. 수업 메모와 원본 영상은 `notes/` 또는 레포 밖에 둡니다.
 3. 실수로 개인정보를 커밋했다면 추가 커밋으로 덮지 말고 바로 작업을 멈추세요. 히스토리 정리가 필요합니다.
 
-자동 검사(`tools/privacy-check.sh`, pre-commit hook)는 Phase 3에서 추가됩니다.
+### 자동 검사 설정 (처음 한 번)
+
+```sh
+brew install exiftool ffmpeg              # 사진 메타데이터·영상 검사 도구
+git config core.hooksPath .githooks       # 커밋할 때마다 개인정보 검사 실행
+```
+
+### 검사 도구
+
+```sh
+tools/privacy-check.sh                    # content/ 검사 (금지어는 data/도 함께)
+tools/privacy-check.sh content/posts/2026-10-24-week-02   # 특정 글 폴더만
+tools/strip-metadata.sh content/posts/2026-10-24-week-02  # 사진 GPS 등 메타데이터 제거
+```
+
+`privacy-check.sh`가 막는 것:
+
+- 금지어(`.private/names.txt`)가 글에 들어 있음 — 로컬 전용, CI에서는 건너뜁니다. 일치한 단어는 출력하지 않고 위치만 알려 줍니다.
+- 사진(jpg/png/heic/webp)에 GPS 정보가 남아 있음 → `tools/strip-metadata.sh <폴더>`
+- 이미지 2MB, 영상(mp4/webm) 3MB, GIF 3MB 초과
+- 영상에 오디오 트랙이 있음 → `tools/clip.sh`로 다시 변환
+
+PR에서도 같은 검사(금지어 제외)가 돌아갑니다. 사람 눈으로 보는 검토(얼굴, 이름표, 화면 속 계정명 등)는 Claude Code 서브 에이전트 `privacy-reviewer`가 맡습니다.
 
 ## 배포
 
