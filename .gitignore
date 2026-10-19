@@ -1,13 +1,38 @@
-# 수업 메모 원본, 원본 영상 (퍼블릭 레포에 올리지 않는다)
+# ── 개인정보: 퍼블릭 레포에 절대 올리지 않는다 ──
+# 수업 메모 원본, 원본 영상
 notes/
 # 아이들 실명 등 금지어 목록 (로컬 전용)
 .private/
 # humanize-korean 중간 산출물
 _workspace/
+# 촬영 원본 영상·음성 (글에는 tools/clip.sh 결과물 mp4/gif/jpg만 넣는다)
+*.mov
+*.MOV
+*.mkv
+*.avi
+*.m4a
+*.wav
+*.mp3
+# 압축 파일 (원본 묶음이 섞여 들어가지 않게)
+*.zip
 
-# Hugo
-public/
-resources/_gen/
+# ── 비밀 정보 ──
+.env
+.env.*
+
+# ── Hugo 빌드 산출물 ──
+/public/
+/resources/_gen/
 .hugo_build.lock
+hugo_stats.json
 
+# ── Claude Code 개인 설정 (agents/, commands/는 커밋한다) ──
+.claude/settings.local.json
+
+# ── OS·에디터 ──
 .DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*~
