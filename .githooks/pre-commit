@@ -1,10 +1,18 @@
 #!/usr/bin/env bash
-# 커밋 전에 개인정보 검사를 실행한다.
+# 커밋 전에 개인정보·비밀 정보·금지 파일을 검사해 문제가 있으면 커밋을 막는다.
 # 설정: git config core.hooksPath .githooks
 set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel)"
 
+# 스테이지된 내용 검사: 브랜치, 금지 경로, 실명, 비밀 정보, 사진·영상 메타데이터
+if ! "$ROOT/tools/commit-guard.sh" staged; then
+  echo
+  echo "🚫 커밋을 막았습니다. 위 메시지대로 고친 뒤 다시 커밋하세요. (--no-verify로 건너뛰지 않습니다)"
+  exit 1
+fi
+
+# 작업 트리의 글·데이터 검사 (금지어, GPS, 크기, 오디오)
 if ! "$ROOT/tools/privacy-check.sh" content data; then
   echo
   echo "🚫 개인정보 검사에 걸려 커밋을 막았습니다. 위 메시지대로 고친 뒤 다시 커밋하세요."
