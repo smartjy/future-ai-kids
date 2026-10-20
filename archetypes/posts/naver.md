@@ -6,7 +6,7 @@
 
 [대표 이미지: 파일명 — 네이버 에디터에서 직접 업로드]
 {{ range $teams }}
-{{ .emoji }} {{ .name }} 연구원들의 한마디
+{{ .emoji }} {{ .name }} 아이들의 한마디
 「○○○ 연구원」:
 {{ end }}
 전체 기록 보기 → {{ site.BaseURL }}posts/{{ $slug }}/

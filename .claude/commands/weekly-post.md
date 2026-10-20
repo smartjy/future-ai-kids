@@ -103,14 +103,20 @@ hugo new content posts/YYYY-MM-DD-week-NN
 `post-writer`에 작업 `요약본`으로 `naver.md`를 맡긴다. (3단계에서 생기지 않았으면 에이전트가 만든다. 사이트 빌드에는 나오지 않는다)
 
 - 제목: GitHub 글과 같다.
-- 본문: 핵심 3~4줄(공통), 참여한 팀마다 「연구원들의 한마디」 1개, 대표 이미지 1장 위치 표시(예: `[대표 이미지: <파일 이름>]`)
+- 본문: 핵심 3~4줄(공통), 참여한 팀마다 「아이들의 한마디」 1개, 대표 이미지 1장 위치 표시(예: `[대표 이미지: <파일 이름>]`)
 - 마지막 줄: `전체 기록 보기 → https://smartjy.github.io/future-ai-kids/posts/<slug>/`
 - 전문을 복사하지 않는다. (유사 문서로 판단되면 네이버 노출이 줄어든다)
 - 쓴 뒤 `/humanize-korean`으로 윤문하고, 5단계와 같은 방법으로 링크·호칭·별칭이 그대로인지 확인한다. 그다음 7단계 검사를 다시 돌린다.
 
-## 9. `content-reviewer` 검토
+## 9. `fact-checker`·`content-reviewer` 검토
 
-`Agent` 도구로 `content-reviewer` 서브 에이전트를 불러 커밋 전 글 내용을 검토받는다. 구조, front matter, 팀 별칭·호칭, 메모와의 사실 일치, 톤, 미디어 참조, `naver.md` 형식, 빌드를 본다.
+먼저 `Agent` 도구로 `fact-checker` 서브 에이전트를 불러 글의 문장이 실제 수업과 맞는지 검증받는다. 문장마다 메모(`notes/YYYY-MM-DD/`)와 원본 사진·영상에서 근거를 찾아 「근거 있음 / 근거 없음 / 메모와 다름 / 부풀림」으로 판정한다.
+
+- 넘길 것: 글 폴더 경로
+- 결과가 **수정 필요**면 근거가 없는 문장은 빼거나 근거가 허용하는 만큼으로 줄인다. 사실이지만 메모에 없는 내용이면 사람에게 확인받아 메모에 먼저 적은 뒤 다시 검증받는다.
+- 윤문(5단계)은 뜻을 바꿀 수 있으므로, 윤문 뒤에도 `fact-checker`를 거친다.
+
+그다음 `content-reviewer` 서브 에이전트를 불러 커밋 전 글 내용을 검토받는다. 구조, front matter, 팀 별칭·호칭, 메모와의 사실 일치, 톤, 미디어 참조, `naver.md` 형식, 빌드를 본다.
 
 - 넘길 것: 글 폴더 경로, 메모 위치, 단계(`초안` 또는 `발행`)
 - 결과가 **수정 필요**면 필수 수정을 고친다. 권장 수정은 사람에게 보여 주고 정한다. 고친 뒤 7단계 검사를 돌리고 다시 검토를 맡긴다.
@@ -175,7 +181,7 @@ hugo server --buildDrafts
 
 1. 본문과 `naver.md`에 `/humanize-korean`을 한 번 더 실행하고 `git diff`로 보호 항목을 확인한다.
 2. `./tools/privacy-check.sh`를 다시 통과시킨다.
-3. `content-reviewer`(단계 `발행`)와 `privacy-reviewer`로 다시 검토한다. 수정 필요·차단이면 고치고 다시 검토한다.
+3. `fact-checker`, `content-reviewer`(단계 `발행`), `privacy-reviewer`로 다시 검토한다. 수정 필요·차단이면 고치고 다시 검토한다.
 4. front matter를 `draft: false`로 바꾸고 `hugo --gc --minify --printPathWarnings`가 경고 없이 끝나는지 확인한다.
 5. 커밋하고 사람의 확인을 받아 같은 브랜치에 push한다.
 6. **머지는 사람이 한다.** `main`에 직접 push하지 않고, force push하지 않는다.
@@ -187,4 +193,4 @@ hugo server --buildDrafts
 - **개인정보(실명, 학교·반·동네, 얼굴이 나온 사진·영상, 메모 원본)가 커밋되거나 push된 것을 발견하면** 즉시 모든 작업을 멈추고 사람에게 알린다. 추가 커밋으로 지우거나 덮지 않는다. (퍼블릭 레포는 히스토리에 남으므로 사람이 히스토리 정리를 판단해야 한다)
 - `main` 브랜치에 있는 상태에서 커밋해야 하는 상황이 되면 멈춘다.
 - 메모가 없거나, 팀 구분이 불분명하거나, `data/teams.yaml`에 없는 팀이 메모에 나오면 추측하지 말고 묻는다.
-- `tools/privacy-check.sh`, `tools/clip.sh`, `post-writer`, `content-reviewer`, `privacy-reviewer`가 없거나 실행되지 않으면 검사를 건너뛰지 말고 사람에게 알린다.
+- `tools/privacy-check.sh`, `tools/clip.sh`, `post-writer`, `fact-checker`, `content-reviewer`, `privacy-reviewer`가 없거나 실행되지 않으면 검사를 건너뛰지 말고 사람에게 알린다.

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# 커밋 메시지에 실명이나 비밀 정보가 있으면 커밋을 막는다.
+# 설정: git config core.hooksPath .githooks
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+exec "$ROOT/tools/commit-guard.sh" message "$1"
