@@ -54,10 +54,10 @@
      - 새 팀은 여기에 한 줄만 추가하면 된다.
    - `archetypes/posts.md`
      - front matter: `title`, `date`, `draft: true`, `tags`, `teams`, `summary`, `cover`
-     - 본문 골격: 이번 주 주제 → 오늘의 수업 흐름 → 활성 팀마다 `## <emoji> <별칭>` 섹션(연구원들이 만든 것 / 연구원들의 한마디) → 다음 주 예고
+     - 본문 골격: 이번 주 주제(그 주 주제를 그대로 제목으로) → 오늘의 수업 흐름 → 활성 팀마다 `## <emoji> <별칭>` 섹션(아이들이 만든 것 / 아이들의 한마디) → 다음 주 예고
      - 팀 섹션과 `teams` 값은 `site.Data.teams`에서 `active: true`인 팀으로 자동 생성한다. 그 주에 쉰 팀은 지운다.
    - `CLAUDE.md`
-     - 글쓰기 규칙: 아이들 눈높이의 따뜻한 톤, archetype 구조 유지, 호칭은 「로켓팀 연구원 A」처럼 팀 별칭 + 연구원 A/B/C
+     - 글쓰기 규칙: 아이들 눈높이의 따뜻한 톤, archetype 구조 유지, 호칭은 「○○○ 연구원」처럼 성은 그대로·이름은 초성이 같은 가명 + 연구원 (명단은 `.private/roster.yaml`)
      - 메모(`notes/`)와 실명 목록(`.private/`)은 커밋하지 않는다.
      - 개인정보 원칙(위 퍼블릭 레포 원칙 요약), main 직접 push 금지
      - humanize 규칙(아래 「문체 다듬기」 참고)
@@ -114,7 +114,7 @@
 5. 서브 에이전트 `.claude/agents/privacy-reviewer.md` 작성 (아래 「서브 에이전트」 참고)
 6. `CLAUDE.md` 개인정보 섹션 보강
    - 커밋 전에 반드시 `tools/privacy-check.sh`를 실행한다.
-   - 메모에 실명이 있으면 글에는 「팀 별칭 + 연구원 A/B/C」로 바꿔 쓰고, 바꾼 사실은 PR 설명에만 남긴다. 실명 자체는 PR에도 쓰지 않는다.
+   - 메모에 실명이 있으면 글에는 `.private/roster.yaml`의 가명으로 바꿔 쓰고, 바꾼 사실은 PR 설명에만 남긴다. 실명 자체는 PR에도 쓰지 않는다.
    - 개인정보 커밋을 발견하면 추가 커밋으로 덮지 말고 즉시 멈추고 사람에게 보고한다.
 
 ### 완료 조건
@@ -170,7 +170,7 @@
 ### 작업
 1. `archetypes/posts.md` 정리: 영상 shortcode 예시 주석 추가
 2. 슬래시 명령 `.claude/commands/weekly-post.md`
-   1. 수업 날짜, 이번 주 참여한 팀, 메모 위치(`notes/YYYY-MM-DD.md`, 한 파일 안 팀별 제목 또는 `notes/YYYY-MM-DD-<team-id>.md`)를 확인한다.
+   1. 수업 날짜, 이번 주 참여한 팀, 메모 위치(`notes/YYYY-MM-DD/` 안 `class.md` 공통 + 팀마다 `<team-id>.md`, 미디어는 `media/`)를 확인한다.
    2. `post/week-NN` 브랜치를 만든다.
    3. `hugo new content posts/YYYY-MM-DD-week-NN`로 글 폴더를 만든다.
    4. 메모를 바탕으로 CLAUDE.md 규칙에 맞춰 본문을 쓴다. (`draft: true`)
@@ -196,7 +196,7 @@
 1. 글 폴더에 `naver.md`를 둔다. 페이지 번들 리소스라 사이트에 따로 게시되지 않는다. (`ignoreFiles`는 `hugo new content`가 오류로 끝나게 만들어 쓰지 않는다. PR check에서 빌드 결과에 요약본이 없는지 검사한다)
 2. 템플릿
    - 제목: GitHub 글과 같다.
-   - 본문: 핵심 3~4줄(공통), 팀마다 「연구원들의 한마디」 1개, 대표 이미지 1장 위치 표시
+   - 본문: 핵심 3~4줄(공통), 팀마다 「아이들의 한마디」 1개, 대표 이미지 1장 위치 표시
    - 마지막 줄: `전체 기록 보기 → https://smartjy.github.io/future-ai-kids/posts/<slug>/`
 3. `CLAUDE.md` 규칙
    - 네이버에는 전문을 복사하지 않는다. (유사 문서로 판단되면 노출이 줄어든다)
@@ -212,7 +212,7 @@
 ## 문체 다듬기: humanize-korean
 
 - **적용 시점:** ① 초안 작성 직후 ② 최종 발행(`draft: false`) 직전. `naver.md`도 같다.
-- **바꾸지 않는 것:** front matter, shortcode, 이미지 경로, 링크, 팀 별칭, 「연구원 A」 호칭. 윤문 뒤 `git diff`로 확인하고 깨졌으면 되돌린다.
+- **바꾸지 않는 것:** front matter, shortcode, 이미지 경로, 링크, 팀 별칭, 「가명 연구원」 호칭. 윤문 뒤 `git diff`로 확인하고 깨졌으면 되돌린다.
 - **중간 산출물:** 스킬이 만드는 `_workspace/`는 `.gitignore`로 제외한다.
 - 윤문 뒤에는 privacy-check를 다시 실행한다.
 
