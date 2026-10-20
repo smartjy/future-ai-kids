@@ -100,6 +100,8 @@ hugo new content posts/YYYY-MM-DD-week-NN
 
 ## 8. 네이버 요약본 (`naver.md`)
 
+> **지금은 중단.** CLAUDE.md에 따라 이 단계는 건너뛴다.
+
 `post-writer`에 작업 `요약본`으로 `naver.md`를 맡긴다. (3단계에서 생기지 않았으면 에이전트가 만든다. 사이트 빌드에는 나오지 않는다)
 
 - 제목: GitHub 글과 같다.

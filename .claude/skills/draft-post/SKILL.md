@@ -28,6 +28,8 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), 
 
 ## 2. 초안 — `post-writer`
 
+> 네이버 블로그는 지금 중단 상태다. 작업은 `본문`으로만 맡기고 `naver.md`는 다루지 않는다.
+
 `Agent` 도구로 `post-writer`를 부른다. 작업은 `둘 다`(index.md + naver.md).
 
 - 넘길 것: 수업 날짜, 주차, 글 폴더, 참여 팀 `id`, 메모 경로, 글 폴더에 있는 미디어 파일, 사람이 이번에 따로 말한 요청
