@@ -2,7 +2,7 @@ baseURL: https://smartjy.github.io/future-ai-kids/
 locale: ko-KR
 defaultContentLanguage: ko
 hasCJKLanguage: true
-title: 미래AI육성 캠프
+title: Future AI Kids
 theme: PaperMod
 enableRobotsTXT: true
 enableEmoji: true
@@ -33,8 +33,8 @@ params:
   ShowCodeCopyButtons: true
   disableSpecial1stPost: false
   homeInfoParams:
-    Title: 미래AI육성 캠프
-    Content: 초등학생 연구원들과 매주 함께하는 AI 수업 기록입니다.
+    Title: Future AI Kids
+    Content: 초등학생 아이들과 매주 함께하는 AI 수업 기록입니다.
   fuseOpts:
     keys: [title, summary, content]
 

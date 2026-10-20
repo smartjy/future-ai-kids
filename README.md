@@ -1,8 +1,8 @@
 # future-ai-kids
 
-**미래AI육성 캠프** — AI with our kids, 아이들과 AI 기록
+**Future AI Kids** — AI with our kids, 아이들과 AI 기록
 
-초등학생 연구원들과 매주 진행하는 AI 수업을 기록하는 블로그입니다.
+초등학생 아이들과 매주 진행하는 AI 수업을 기록하는 블로그입니다.
 주소: https://smartjy.github.io/future-ai-kids/
 
 - 생성기: [Hugo](https://gohugo.io/) (Apache-2.0) extended 0.168.0
