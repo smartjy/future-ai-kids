@@ -54,7 +54,7 @@
      - 새 팀은 여기에 한 줄만 추가하면 된다.
    - `archetypes/posts.md`
      - front matter: `title`, `date`, `draft: true`, `tags`, `teams`, `summary`, `cover`
-     - 본문 골격: 이번 주 주제 → 오늘의 수업 흐름 → 활성 팀마다 `## <emoji> <별칭>` 섹션(아이들이 만든 것 / 아이들의 한마디) → 다음 주 예고
+     - 본문 골격: 이번 주 주제(그 주 주제를 그대로 제목으로) → 오늘의 수업 흐름 → 활성 팀마다 `## <emoji> <별칭>` 섹션(아이들이 만든 것 / 아이들의 한마디) → 다음 주 예고
      - 팀 섹션과 `teams` 값은 `site.Data.teams`에서 `active: true`인 팀으로 자동 생성한다. 그 주에 쉰 팀은 지운다.
    - `CLAUDE.md`
      - 글쓰기 규칙: 아이들 눈높이의 따뜻한 톤, archetype 구조 유지, 호칭은 「○○○ 연구원」처럼 성은 그대로·이름은 초성이 같은 가명 + 연구원 (명단은 `.private/roster.yaml`)
