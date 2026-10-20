@@ -86,7 +86,7 @@ elif [ "${#TEXT_PATHS[@]}" -gt 0 ]; then
       lines="$(grep -niF -e "$word" -- "$f" 2>/dev/null | cut -d: -f1 | tr '\n' ' ' || true)"
       for ln in $lines; do
         fail "$f:$ln" "금지어 파일 ${word_line}번째 줄과 일치" \
-          "해당 줄의 실명·학교·동네를 지우거나 「팀 별칭 + 연구원 A/B/C」로 바꿔 쓰기"
+          "해당 줄의 실명·학교·동네를 지우거나 「가명 연구원」으로 바꿔 쓰기 (.private/roster.yaml)"
       done
     done < "$TEXT_FILES"
   done < "$WORDS_FILE"
