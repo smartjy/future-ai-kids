@@ -1,0 +1,2 @@
+{{- /* 글 본문의 첫 번째 ## 제목이 그 주의 주제다 */ -}}
+{{- with findRESubmatch `<h2[^>]*>(.*?)</h2>` .Content 1 }}{{ index . 0 1 | plainify | htmlUnescape }}{{ end -}}

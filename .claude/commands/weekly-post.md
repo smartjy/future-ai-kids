@@ -52,7 +52,7 @@ hugo new content posts/YYYY-MM-DD-week-NN
 `Agent` 도구로 `post-writer` 서브 에이전트를 불러 `index.md` 초안을 맡긴다.
 
 - 넘길 것: 수업 날짜, 주차 `NN`, 참여한 팀 `id` 목록, 메모 위치, 작업 `본문`
-- 에이전트는 메모의 실명을 `.private/roster.yaml`의 가명(「<가명> 연구원」)으로 바꾸고, 쉰 팀을 빼고, `summary`·`tags`를 채운다. 보고서에는 바꾼 종류와 개수만 온다.
+- 에이전트는 메모의 실명을 `.private/roster.yaml`의 가명(「<가명>」)으로 바꾸고, 쉰 팀을 빼고, `summary`·`tags`를 채운다. 보고서에는 바꾼 종류와 개수만 온다.
 - 실명과 가명의 대응은 `.private/roster.yaml`에만 둔다. 글, 주석, 커밋 메시지, PR 본문, scratchpad 등 **다른 파일에는 쓰지 않는다.** 명단에 없는 아이가 메모에 나오면 사람에게 가명을 받아 명단과 `.private/names.txt`에 넣는다.
 - 보고서의 「확인이 필요한 점」(모호한 메모, 한마디가 없는 팀 등)은 사람에게 물어 정한 뒤 직접 고치거나 에이전트에 다시 맡긴다.
 - 받은 뒤 글을 직접 읽고, 메모 속 실명이 남지 않았는지 `Grep`으로 한 번 더 확인한다. (검색어는 대화 안에서만 쓰고 파일로 남기지 않는다)
@@ -61,7 +61,7 @@ hugo new content posts/YYYY-MM-DD-week-NN
 
 `/humanize-korean` 스킬로 **본문만** 윤문해 AI 티를 없앤다.
 
-- 바꾸지 않는 것: front matter, shortcode(`{{< clip ... >}}` 등), 이미지·영상 경로, 링크, 팀 별칭, 「<가명> 연구원」 호칭, 제목(`##`) 구조
+- 바꾸지 않는 것: front matter, shortcode(`{{< clip ... >}}` 등), 이미지·영상 경로, 링크, 팀 별칭, 가명 호칭, 해요체 문체, 제목(`##`) 구조
 - 윤문 뒤 `git diff`(새 파일이면 윤문 전 내용과 비교)로 위 항목이 그대로인지 확인하고, 깨졌으면 그 부분을 되돌린다.
 - 스킬이 만드는 `_workspace/`는 커밋하지 않는다. (`.gitignore` 대상)
 
@@ -103,7 +103,7 @@ hugo new content posts/YYYY-MM-DD-week-NN
 `post-writer`에 작업 `요약본`으로 `naver.md`를 맡긴다. (3단계에서 생기지 않았으면 에이전트가 만든다. 사이트 빌드에는 나오지 않는다)
 
 - 제목: GitHub 글과 같다.
-- 본문: 핵심 3~4줄(공통), 참여한 팀마다 「아이들의 한마디」 1개, 대표 이미지 1장 위치 표시(예: `[대표 이미지: <파일 이름>]`)
+- 본문: 핵심 3~4줄(공통), 참여한 팀마다 「아이들의 한마디」 1개(메모에 있을 때만), 대표 이미지 1장 위치 표시(예: `[대표 이미지: <파일 이름>]`)
 - 마지막 줄: `전체 기록 보기 → https://smartjy.github.io/future-ai-kids/posts/<slug>/`
 - 전문을 복사하지 않는다. (유사 문서로 판단되면 네이버 노출이 줄어든다)
 - 쓴 뒤 `/humanize-korean`으로 윤문하고, 5단계와 같은 방법으로 링크·호칭·별칭이 그대로인지 확인한다. 그다음 7단계 검사를 다시 돌린다.
@@ -184,7 +184,7 @@ hugo server --buildDrafts
 3. `fact-checker`, `content-reviewer`(단계 `발행`), `privacy-reviewer`로 다시 검토한다. 수정 필요·차단이면 고치고 다시 검토한다.
 4. front matter를 `draft: false`로 바꾸고 `hugo --gc --minify --printPathWarnings`가 경고 없이 끝나는지 확인한다.
 5. 커밋하고 사람의 확인을 받아 같은 브랜치에 push한다.
-6. **머지는 사람이 한다.** `main`에 직접 push하지 않고, force push하지 않는다.
+6. **머지는 리뷰어 승인을 받은 뒤 사람이 한다.** (회사 규칙: 리뷰어 승인을 받은 PR로만 반영) 머지 방식은 「Create a merge commit」. 여러 PR이 사슬로 쌓여 있으면 맨 위부터 아래로 머지하고, 다 끝날 때까지 브랜치를 지우지 않는다. `main`에 직접 push하지 않고, force push하지 않는다.
 
 네이버 업로드는 GitHub 발행 뒤에 사람이 `naver.md`를 보고 직접 한다. 이미지는 네이버 에디터에서 따로 올린다.
 

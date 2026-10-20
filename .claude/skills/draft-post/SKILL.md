@@ -20,6 +20,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), 
 - **참여 팀**: 팀 파일 이름을 `data/teams.yaml`의 `id`와 맞춰 참여 팀을 정하고 사람에게 확인받는다. (예: 「team1(TeamA)만 참여, team2는 쉼」) `teams.yaml`에 없는 파일이 있으면 묻는다.
 - **명단**: `.private/roster.yaml`이 있는지 본다. 없으면 멈춘다. 내용은 출력하지 않는다.
 - **빈 칸**: 메모의 `[[ ]]` 칸 수를 세어 알려 준다. 많으면 「채우고 진행할지, 빈 채로 진행할지」를 묻는다.
+- **아이들 이야기**: 팀 메모에 아이별 이야기(누가 무엇을 했는지, 한 말, 있었던 일)가 있는지 본다. 없으면 「이대로 쓰면 아이들 이야기가 빠진 글이 된다」고 분명히 말하고, 채울지 묻는다. 채팅으로 받은 내용은 메모 파일에 먼저 적는다.
 - **글 폴더**: `content/posts/YYYY-MM-DD-week-NN/`. 주차 `NN`은 `content/posts/*-week-NN/` 중 가장 큰 번호 + 1(두 자리). 같은 날짜 폴더가 이미 있으면 그 폴더를 다시 쓸지 묻는다. 없으면 만든다.
   ```sh
   hugo new content posts/YYYY-MM-DD-week-NN
@@ -37,8 +38,9 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), 
 
 `Skill` 도구로 `humanize-korean`을 실행해 `index.md` 본문과 `naver.md`를 윤문한다.
 
-- 바꾸지 않는 것: front matter, shortcode, 이미지·영상 경로, 링크, 팀 별칭, 「<가명> 연구원」 호칭, 제목(`##`) 구조, `naver.md` 마지막 링크 줄
+- 바꾸지 않는 것: front matter, shortcode, 이미지·영상 경로, 링크, 팀 별칭, 가명 호칭, 해요체 문체, 제목(`##`) 구조, `naver.md` 마지막 링크 줄
 - 윤문 전 내용과 비교해 위 항목이 깨졌으면 그 부분을 되돌린다.
+- 윤문은 문체(register)를 보존한다. 문체를 바꾸고 싶으면 윤문이 아니라 초안(2단계)에서 바꾼다.
 - `_workspace/`는 커밋하지 않는다.
 
 ## 4. 사실 검증 — `fact-checker`
@@ -54,7 +56,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), 
 `Agent` 도구로 `content-reviewer`를 부른다. 넘길 것: 글 폴더 경로, 메모 경로, 단계 `초안`
 
 - 필수 수정은 고친다. 권장 수정은 7단계에서 사람에게 보여 준다.
-- 사람이 이번 글에서 빼라고 한 섹션(예: 아이들의 한마디, 다음 주 예고)이 없다는 지적은 「사람 결정으로 뺌」으로 넘긴다.
+- 메모가 비어서 빠진 섹션(아이들의 한마디, 숙제, 다음 주 예고)이나 사람이 빼라고 한 섹션에 대한 지적은 「메모 없음/사람 결정으로 뺌」으로 넘긴다.
 - 문장을 많이 고쳤으면 4단계 사실 검증을 다시 거친다.
 
 ## 6. 자동 검사
@@ -75,6 +77,7 @@ hugo --gc --minify --printPathWarnings --buildDrafts --destination "$(mktemp -d)
 - **naver.md 전문**
 - **검증 결과**: fact-checker(판정 개수, 고친 문장 전·후), content-reviewer(고친 것, 남은 권장 수정), privacy-check, 빌드
 - **사람이 정할 것**: 메모의 빈 칸, 메모에 없지만 사실일 수 있는 내용, 문체·섹션 선택 같은 결정
+- **홈 화면**: 이 글이 홈의 주차별 기록판에서 어떻게 보이는지(주제 = 첫 `##` 제목, `made`, `summary`, 대표 사진)도 함께 확인한다.
 - **미리 보기**: `hugo server --buildDrafts` → `http://localhost:1313/future-ai-kids/posts/YYYY-MM-DD-week-NN/`
 - **다음 단계**: 사진·영상 추가(`/weekly-post` 6단계), `privacy-reviewer`, 커밋·PR(`/weekly-post` 10~11단계)
 
