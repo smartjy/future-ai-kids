@@ -1,0 +1,21 @@
+/* tools/clip.sh 결과물을 넣는 clip shortcode */
+.post-content figure.clip {
+    margin: 1.5em 0;
+}
+
+.post-content figure.clip video,
+.post-content figure.clip img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: var(--radius);
+}
+
+.post-content figure.clip figcaption {
+    margin-top: 0.5em;
+    text-align: center;
+    font-size: 0.9em;
+    color: var(--secondary);
+}

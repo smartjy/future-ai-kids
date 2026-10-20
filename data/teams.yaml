@@ -1,0 +1,13 @@
+# 팀 목록. 새 팀이 생기면 아래에 항목 하나를 추가한다.
+# name에는 아이들이 정한 별칭만 쓴다. 학교명, 동네, 반 이름은 쓰지 않는다.
+# 그 주에 쉬는 팀이 아니라 활동을 끝낸 팀은 active: false로 바꾼다.
+- id: team1
+  name: TeamA      # 임시 별칭
+  emoji: "🚀"
+  intro: 첫 번째 팀
+  active: true
+- id: team2
+  name: TeamB      # 임시 별칭
+  emoji: "⭐"
+  intro: 두 번째 팀
+  active: true

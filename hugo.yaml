@@ -1,0 +1,58 @@
+baseURL: https://smartjy.github.io/future-ai-kids/
+locale: ko-KR
+defaultContentLanguage: ko
+hasCJKLanguage: true
+title: 미래AI육성 캠프
+theme: PaperMod
+enableRobotsTXT: true
+enableEmoji: true
+
+pagination:
+  pagerSize: 10
+
+taxonomies:
+  tag: tags
+  team: teams
+
+outputs:
+  home: [HTML, RSS, JSON]
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: false
+
+params:
+  description: AI with our kids — 아이들과 AI 기록
+  author: AI연구소장
+  defaultTheme: auto
+  ShowReadingTime: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowShareButtons: false
+  ShowCodeCopyButtons: true
+  disableSpecial1stPost: false
+  homeInfoParams:
+    Title: 미래AI육성 캠프
+    Content: 초등학생 연구원들과 매주 함께하는 AI 수업 기록입니다.
+  fuseOpts:
+    keys: [title, summary, content]
+
+menu:
+  main:
+    - identifier: posts
+      name: 글
+      url: posts/
+      weight: 10
+    - identifier: teams
+      name: 팀
+      url: teams/
+      weight: 20
+    - identifier: tags
+      name: 태그
+      url: tags/
+      weight: 30
+    - identifier: search
+      name: 검색
+      url: search/
+      weight: 40

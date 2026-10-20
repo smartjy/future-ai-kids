@@ -1,0 +1,37 @@
+name: PR check
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.168.0
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install Hugo
+        run: |
+          curl -fsSL -o hugo.tar.gz \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+          tar -xzf hugo.tar.gz hugo
+          sudo mv hugo /usr/local/bin/
+          hugo version
+      - name: Build (drafts 포함)
+        run: hugo --gc --minify --buildDrafts --printPathWarnings --panicOnWarning
+      - name: Install exiftool, ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libimage-exiftool-perl ffmpeg
+      - name: 개인정보 검사 (GPS·크기·오디오, 금지어는 로컬 전용)
+        run: tools/privacy-check.sh content data
+      - name: 네이버 요약본이 사이트에 나가지 않는지 확인
+        run: |
+          if find public -iname '*naver*' | grep -q . || grep -rlq "전체 기록 보기" public; then
+            echo "naver.md 내용이 빌드 결과(public/)에 들어갔습니다." >&2
+            exit 1
+          fi
