@@ -33,7 +33,7 @@ model: opus
 - 메모가 없으면 「메모 없음」이라고 보고하고, 미디어로 확인되는 문장만 판정한다. 나머지는 모두 「근거 없음」이다.
 
 ## 2. 문장마다 판정
-`index.md` 본문(front matter의 `title`, `summary`, `cover.alt`, 이미지 `alt`, clip `alt` 포함)과 `naver.md`를 문장 또는 목록 항목 단위로 나눠 하나씩 판정한다.
+`index.md` 본문(front matter의 `title`, `summary`, `made`, `cover.alt`, 이미지 `alt`, clip `alt` 포함. `summary`와 `made`는 홈 화면에 그대로 나온다)과 `naver.md`를 문장 또는 목록 항목 단위로 나눠 하나씩 판정한다.
 
 | 판정 | 뜻 |
 |---|---|

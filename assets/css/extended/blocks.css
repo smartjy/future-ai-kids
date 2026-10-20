@@ -1,0 +1,500 @@
+/* Future AI Kids — 블록 카드 디자인
+   미색 바탕 위 둥근 흰 카드, 파랑·노랑·빨강·초록 색 타일, 굵고 친근한 글씨.
+   한 번에 하나씩 쉽게 읽히도록 카드 하나에 한 가지 내용만 담는다. */
+
+:root {
+    --fk-ground: #f6f5f0;
+    --fk-card: #ffffff;
+    --fk-soft: #f4f3ee;
+    --fk-ink: #1e242b;
+    --fk-muted: #5f6873;
+    --fk-line: #c7cbd2;
+    --fk-blue: #4c86ef;
+    --fk-yellow: #f5b62a;
+    --fk-red: #e8503c;
+    --fk-green: #33a457;
+    --fk-shadow: 0 10px 32px rgba(38, 49, 63, 0.10);
+    --fk-radius: 20px;
+    --fk-margin: clamp(16px, 4vw, 32px);
+
+    --theme: var(--fk-ground);
+    --entry: var(--fk-card);
+    --primary: var(--fk-ink);
+    --content: var(--fk-ink);
+    --secondary: var(--fk-muted);
+    --tertiary: var(--fk-soft);
+    --border: var(--fk-soft);
+    --code-bg: var(--fk-soft);
+    --radius: var(--fk-radius);
+    --main-width: 760px;
+}
+
+:root[data-theme="dark"] {
+    --fk-ground: #15181d;
+    --fk-card: #1f242b;
+    --fk-soft: #272d35;
+    --fk-ink: #f1f1ee;
+    --fk-muted: #aab1bb;
+    --fk-line: #3a414b;
+    --fk-shadow: 0 10px 32px rgba(0, 0, 0, 0.35);
+}
+
+body,
+.list {
+    background: var(--fk-ground);
+}
+
+body {
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 1.0625rem;
+    color: var(--fk-ink);
+    letter-spacing: -0.01em;
+    word-break: keep-all;
+}
+
+.header-nav .logo a {
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+/* ── 공통 부품 ── */
+.fk-card {
+    display: block;
+    background: var(--fk-card);
+    border-radius: var(--fk-radius);
+    box-shadow: var(--fk-shadow);
+    color: var(--fk-ink);
+}
+
+a.fk-card {
+    transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+a.fk-card:hover,
+a.fk-card:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(38, 49, 63, 0.16);
+}
+
+.fk-tile {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    color: #fff;
+    font-weight: 800;
+}
+
+.fk-blue,   .fk-c0 { background: var(--fk-blue); }
+.fk-yellow, .fk-c1 { background: var(--fk-yellow); }
+.fk-green,  .fk-c2 { background: var(--fk-green); }
+.fk-red,    .fk-c3 { background: var(--fk-red); }
+
+.fk-muted {
+    color: var(--fk-muted);
+}
+
+.fk-section-title {
+    font-size: 1.375rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin: 0 0 16px;
+}
+
+.fk-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    background: var(--fk-blue);
+    color: #fff;
+    font-weight: 700;
+}
+
+/* ── 홈 ── */
+.fk-home {
+    display: grid;
+    gap: clamp(40px, 6vw, 64px);
+    padding: clamp(24px, 5vw, 56px) 0 clamp(48px, 8vw, 96px);
+}
+
+.fk-intro h1 {
+    font-size: clamp(2.5rem, 1.6rem + 4vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    margin: 0 0 12px;
+}
+
+.fk-intro p {
+    font-size: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+    color: var(--fk-muted);
+    margin: 0;
+}
+
+/* 팀 카드 두 장 */
+.fk-team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.fk-team {
+    padding: 24px;
+    display: grid;
+    align-content: start;
+    gap: 6px;
+}
+
+.fk-tile-lg {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.fk-team h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin: 0;
+}
+
+.fk-team > p {
+    margin: 0;
+}
+
+.fk-team-facts {
+    margin: 14px 0 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.fk-team-facts > div {
+    background: var(--fk-soft);
+    border-radius: 12px;
+    padding: 10px 12px;
+}
+
+.fk-team-facts dt {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--fk-muted);
+}
+
+.fk-team-facts dd {
+    margin: 2px 0 0;
+    font-weight: 700;
+}
+
+.fk-team-link {
+    margin-top: 12px;
+    font-weight: 700;
+}
+
+.fk-team-blue .fk-team-link { color: var(--fk-blue); }
+.fk-team-yellow .fk-team-link { color: #b9820a; }
+.fk-team-green .fk-team-link { color: var(--fk-green); }
+.fk-team-red .fk-team-link { color: var(--fk-red); }
+
+/* 주차별 기록판 */
+.fk-weeks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+}
+
+.fk-week {
+    margin: 0;
+    overflow: hidden;
+}
+
+.fk-week-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px 12px;
+}
+
+.fk-num {
+    background: var(--fk-ink);
+    color: var(--fk-card);
+}
+
+.fk-week-title {
+    flex: 1;
+    display: grid;
+    gap: 2px;
+}
+
+.fk-week-title .fk-muted {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.fk-week-title b {
+    font-size: 1.0625rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+}
+
+.fk-week-latest .fk-week-title b {
+    font-size: clamp(1.25rem, 1.05rem + 1vw, 1.625rem);
+}
+
+.fk-week-latest .fk-num {
+    background: var(--fk-blue);
+    color: #fff;
+}
+
+.fk-week-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 5 / 2;
+    object-fit: cover;
+}
+
+.fk-week-summary {
+    margin: 14px 18px 0;
+    line-height: 1.6;
+}
+
+.fk-week-teams {
+    list-style: none;
+    margin: 0;
+    padding: 12px 18px 18px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+}
+
+.fk-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: var(--fk-soft);
+}
+
+.fk-cell b {
+    margin-right: 6px;
+}
+
+.fk-cell-off {
+    color: var(--fk-muted);
+}
+
+.fk-cell-off .fk-dot {
+    opacity: 0.35;
+}
+
+.fk-dot {
+    flex: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+}
+
+.fk-week:has(.fk-week-head:hover) {
+    transform: translateY(-2px);
+}
+
+.fk-week {
+    transition: transform 160ms ease;
+}
+
+.fk-more {
+    display: inline-block;
+    margin-top: 16px;
+    font-weight: 700;
+    color: var(--fk-blue);
+}
+
+/* 소개 */
+.fk-about-card {
+    padding: clamp(20px, 4vw, 32px);
+    line-height: 1.7;
+}
+
+.fk-about-card p {
+    margin: 0 0 12px;
+}
+
+
+/* ── 글 페이지 ── */
+.post-title {
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.2;
+}
+
+.post-meta,
+.breadcrumbs {
+    color: var(--fk-muted);
+}
+
+/* 목차를 카드로: 글 첫머리에서 어디로 갈지 바로 고른다 */
+.toc {
+    background: var(--fk-card);
+    border: 0;
+    border-radius: var(--fk-radius);
+    box-shadow: var(--fk-shadow);
+    padding: 16px 20px;
+}
+
+.toc summary {
+    font-weight: 800;
+}
+
+.toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.toc .inner > ul > li > a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    font-weight: 600;
+}
+
+.toc .inner > ul > li > a::before {
+    content: "";
+    flex: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    background: var(--fk-blue);
+}
+
+.toc .inner > ul > li:nth-child(4n+2) > a::before { background: var(--fk-yellow); }
+.toc .inner > ul > li:nth-child(4n+3) > a::before { background: var(--fk-green); }
+.toc .inner > ul > li:nth-child(4n+4) > a::before { background: var(--fk-red); }
+
+.toc .inner ul ul {
+    padding-left: 24px;
+}
+
+.post-content {
+    line-height: 1.75;
+}
+
+/* 섹션 제목마다 색 타일: 지금 어느 칸을 읽는지 알 수 있게 */
+.post-content h2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: clamp(1.375rem, 1.1rem + 1vw, 1.75rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-top: 2.2em;
+}
+
+.post-content h2::before {
+    content: "";
+    flex: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    background: var(--fk-blue);
+}
+
+.post-content h2:nth-of-type(4n+2)::before { background: var(--fk-yellow); }
+.post-content h2:nth-of-type(4n+3)::before { background: var(--fk-green); }
+.post-content h2:nth-of-type(4n+4)::before { background: var(--fk-red); }
+
+.post-content h3 {
+    font-weight: 700;
+}
+
+.post-content ol,
+.post-content ul {
+    padding-left: 1.4em;
+}
+
+.post-content img,
+.entry-cover img {
+    border-radius: 16px;
+}
+
+.post-content a {
+    box-shadow: none;
+    color: var(--fk-blue);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.post-content blockquote {
+    background: var(--fk-card);
+    border: 0;
+    border-radius: 16px;
+    box-shadow: var(--fk-shadow);
+    padding: 16px 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    a.fk-card {
+        transition: none;
+    }
+}
+
+/* ── 전체 기록(글 목록) 페이지: 홈과 같은 카드 ── */
+.post-entry {
+    background: var(--fk-card);
+    border: 0;
+    border-radius: var(--fk-radius);
+    box-shadow: var(--fk-shadow);
+    padding: 0 0 20px;
+    overflow: hidden;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.post-entry:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(38, 49, 63, 0.16);
+}
+
+.post-entry .entry-cover {
+    margin: 0 0 16px;
+}
+
+.post-entry .entry-cover img {
+    border-radius: 0;
+    aspect-ratio: 2 / 1;
+    object-fit: cover;
+}
+
+.post-entry .entry-header,
+.post-entry .entry-content,
+.post-entry .entry-footer {
+    padding: 0 20px;
+}
+
+.post-entry .entry-header h2 {
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+/* 글 아래 이전·다음 기록 */
+.paginav {
+    border: 0;
+    background: transparent;
+    gap: 12px;
+}
+
+.paginav a {
+    background: var(--fk-card);
+    border-radius: 16px;
+    box-shadow: var(--fk-shadow);
+}

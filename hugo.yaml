@@ -24,9 +24,10 @@ markup:
 
 params:
   description: AI with our kids — 아이들과 AI 기록
-  author: AI연구소장
   defaultTheme: auto
   ShowReadingTime: true
+  ShowToc: true
+  TocOpen: true
   ShowPostNavLinks: true
   ShowBreadCrumbs: true
   ShowShareButtons: false

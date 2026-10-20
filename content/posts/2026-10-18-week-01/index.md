@@ -4,6 +4,8 @@ date: 2026-10-18T10:00:00+09:00
 draft: false
 tags: ["AI 시대", "게임 만들기"]
 teams: ["TeamA"]
+made:
+  TeamA: "게임 DOUMY"
 summary: "AI 시대에 어떤 일을 하게 될지 이야기하고, AI에게 일을 시켜 게임 DOUMY를 만들었어요."
 cover:
   image: "doumy-screen.jpg"

@@ -11,7 +11,7 @@
 - **생성기:** Hugo (Apache-2.0) + PaperMod 테마 (MIT, `themes/PaperMod`에 벤더링)
 - **배포:** GitHub Pages (공식 `actions/deploy-pages`)
 - **주소:** https://smartjy.github.io/future-ai-kids/
-- **블로그 정보:** 이름 `Future AI Kids` (수업 이름은 미래AI육성 캠프) / 설명 `AI with our kids — 아이들과 AI 기록` / 작성자 `AI연구소장`
+- **블로그 정보:** 이름 `Future AI Kids` (수업 이름은 미래AI육성 캠프) / 설명 `AI with our kids — 아이들과 AI 기록`
 - **출발점:** 스캐폴드 zip이 없으므로 이 계획서를 기준으로 스캐폴드를 새로 만든다.
 - **팀 구성:** 현재 2팀, 앞으로 늘어날 수 있다. 매주 **글 1개에 여러 팀을 함께** 쓰고, 팀 이름은 **별칭**(예: 로켓팀, 별빛팀)만 쓴다.
 - **문체:** 초안 작성 직후와 최종 발행 직전에 `/humanize-korean` 스킬로 AI 티를 없앤다.
