@@ -1,0 +1,40 @@
+{{- /*
+  수업 영상 클립. 글 폴더(page bundle)에 tools/clip.sh 결과물을 두고 쓴다.
+  사용: {{< clip src="app-demo.mp4" alt="퀴즈 앱이 점수를 올리는 장면" caption="선택" >}}
+  - mp4/webm: 자동 재생·반복·소리 없음. 같은 이름의 .jpg가 있으면 포스터로 쓴다.
+  - gif: <img>로 출력한다.
+  - alt는 필수. 없으면 빌드 경고를 낸다.
+*/ -}}
+{{- $src := .Get "src" -}}
+{{- $alt := .Get "alt" | default "" -}}
+{{- $caption := .Get "caption" -}}
+{{- if not $src -}}
+  {{- errorf "clip shortcode: src가 없습니다. 예: clip src=\"app-demo.mp4\" alt=\"장면 설명\" (%s)" .Position -}}
+{{- end -}}
+{{- $res := .Page.Resources.GetMatch $src -}}
+{{- if not $res -}}
+  {{- errorf "clip shortcode: 글 폴더에 '%s' 파일이 없습니다. tools/clip.sh로 만든 파일을 index.md와 같은 폴더에 두세요. (%s)" $src .Position -}}
+{{- else -}}
+  {{- if not $alt -}}
+    {{- warnf "clip shortcode: '%s'에 alt가 없습니다. 장면을 설명하는 alt를 넣어 주세요. (%s)" $src .Position -}}
+  {{- end -}}
+  {{- $ext := lower (path.Ext $res.Name) -}}
+<figure class="clip">
+  {{- if in (slice ".mp4" ".webm") $ext }}
+    {{- $poster := .Page.Resources.GetMatch (printf "%s.jpg" (strings.TrimSuffix $ext $res.Name)) }}
+  <video autoplay loop muted playsinline preload="metadata"
+    {{- with $poster }} poster="{{ .RelPermalink }}"{{ end }}
+    {{- with $alt }} aria-label="{{ . }}"{{ end }}>
+    <source src="{{ $res.RelPermalink }}" type="{{ cond (eq $ext ".webm") "video/webm" "video/mp4" }}">
+    {{ with $alt }}{{ . }} — {{ end }}이 브라우저에서는 영상을 재생할 수 없습니다.
+  </video>
+  {{- else if eq $ext ".gif" }}
+  <img src="{{ $res.RelPermalink }}" alt="{{ $alt }}" loading="lazy">
+  {{- else }}
+    {{- errorf "clip shortcode: '%s'는 지원하지 않는 형식입니다. mp4, webm, gif만 쓸 수 있습니다. (%s)" $src .Position }}
+  {{- end }}
+  {{- with $caption }}
+  <figcaption>{{ . }}</figcaption>
+  {{- end }}
+</figure>
+{{- end -}}
