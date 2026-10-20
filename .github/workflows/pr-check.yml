@@ -29,3 +29,9 @@ jobs:
           sudo apt-get install -y --no-install-recommends libimage-exiftool-perl ffmpeg
       - name: 개인정보 검사 (GPS·크기·오디오, 금지어는 로컬 전용)
         run: tools/privacy-check.sh content data
+      - name: 네이버 요약본이 사이트에 나가지 않는지 확인
+        run: |
+          if find public -iname '*naver*' | grep -q . || grep -rlq "전체 기록 보기" public; then
+            echo "naver.md 내용이 빌드 결과(public/)에 들어갔습니다." >&2
+            exit 1
+          fi
