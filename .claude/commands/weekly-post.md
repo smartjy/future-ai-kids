@@ -23,7 +23,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), 
   - `<team-id>.md`: 팀마다 한 파일 (`team1.md` 등). 고른 참여 팀과 팀 파일 목록이 맞는지 확인하고, 다르면 묻는다.
 - **미디어 위치**: 사진·영상 원본은 `notes/YYYY-MM-DD/media/`에 둔다. 파일 이름 앞에 팀 id(공통이면 `class-`)를 붙인다. 없으면 글만 쓴다.
 
-주차 번호 `NN`은 `content/posts/*-week-NN/` 중 가장 큰 번호에 1을 더해 두 자리(`02`, `03`, ...)로 정한다. 같은 날짜의 글 폴더가 이미 있으면 멈추고 사람에게 묻는다.
+주차는 팀별로 센다. `NN`은 `content/posts/*/index.md` 중 front matter `teams`에 그 팀이 들어간 글 수에 1을 더한 두 자리 번호다. (예: TeamA가 두 번 수업했으면 TeamA의 다음 글은 `03`) 한 글에 들어갈 팀들의 주차가 서로 다르면 멈추고 사람에게 묻는다. 같은 날짜의 글 폴더가 이미 있으면 멈추고 사람에게 묻는다.
 
 `notes/`와 `.private/`는 `.gitignore` 대상이다. 메모 내용을 레포의 다른 파일로 옮겨 적지 않는다.
 
@@ -32,11 +32,11 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), 
 ```bash
 git switch main
 git pull --ff-only
-git switch -c post/week-NN
+git switch -c post/<팀 별칭 소문자>-week-NN   # 예: post/teamb-week-01
 ```
 
 - 작업 트리에 커밋하지 않은 변경이 있으면 멈추고 사람에게 묻는다.
-- `main`에서는 절대 커밋하지 않는다. 이후 모든 커밋은 `post/week-NN`에서 한다.
+- `main`에서는 절대 커밋하지 않는다. 이후 모든 커밋은 이 브랜치에서 한다.
 
 ## 3. 글 폴더 만들기
 
@@ -137,14 +137,14 @@ hugo new content posts/YYYY-MM-DD-week-NN
 ```bash
 git add content/posts/YYYY-MM-DD-week-NN
 git status   # notes/, .private/, _workspace/, 원본 영상이 섞이지 않았는지 확인
-git commit -m "NN주차 수업 기록 초안"
+git commit -m "<팀 별칭> NN주차 수업 기록 초안"
 ```
 
 - 커밋 메시지는 한국어로, 실명 없이 쓴다.
 - **push하기 전에 사람에게 확인을 받는다.** 확인을 받으면:
   ```bash
-  git push -u origin post/week-NN
-  gh pr create --base main --head post/week-NN --title "NN주차 수업 기록" --body-file <본문>
+  git push -u origin post/<팀 별칭 소문자>-week-NN
+  gh pr create --base main --head post/<팀 별칭 소문자>-week-NN --title "<팀 별칭> NN주차 수업 기록" --body-file <본문>
   ```
 - PR 본문 템플릿 (본문 파일은 scratchpad에 만들고 커밋하지 않는다):
   ```markdown

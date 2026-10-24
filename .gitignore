@@ -13,12 +13,24 @@ _workspace/
 *.m4a
 *.wav
 *.mp3
+*.m4v
+*.M4V
+*.MP4
+# 휴대폰 사진 원본·편집 정보 (글에는 tools/strip-metadata.sh를 거친 jpg/png만 넣는다)
+*.heic
+*.HEIC
+*.aae
+*.AAE
 # 압축 파일 (원본 묶음이 섞여 들어가지 않게)
 *.zip
 
 # ── 비밀 정보 ──
 .env
 .env.*
+.envrc
+*.pem
+*.key
+*.p12
 
 # ── Hugo 빌드 산출물 ──
 /public/
@@ -35,6 +47,7 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+*.log
 *~
 
 # ── Claude Code 병렬 작업용 worktree ──
