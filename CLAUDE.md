@@ -8,6 +8,7 @@
 - 아이들 실명, 학교명, 반, 동네 이름은 글, PR, 커밋 메시지 어디에도 쓰지 않는다.
 - 개인정보가 커밋된 것을 발견하면 추가 커밋으로 덮지 않는다. 즉시 작업을 멈추고 사람에게 보고한다. (히스토리 정리가 필요하다)
 - `main`에 직접 push하거나 force push하지 않는다. 모든 변경은 브랜치와 PR로 한다.
+- push하기 전에 항상 `/security-review`로 그 브랜치의 변경을 보안 관점에서 검토받는다. 글만 바꾼 브랜치도 같다. 취약점이 나오면 고치고 커밋한 뒤 다시 실행하고, 결과(발견 없음 또는 고친 것)는 PR 본문 「검증」에 적는다. 보고서에 실명이나 비밀 정보를 옮기지 않는다.
 
 ## 개인정보 검사
 - 커밋 전에 반드시 `tools/privacy-check.sh`를 실행한다. (pre-commit hook이 `content/`, `data/`를 자동 검사한다. hook은 `git config core.hooksPath .githooks`로 켠다)
@@ -51,7 +52,7 @@
 
 ## 주간 글쓰기 (/weekly-post)
 - 매주 글은 `/weekly-post [YYYY-MM-DD]`로 쓴다. 자세한 단계는 `.claude/commands/weekly-post.md`에 있다.
-- 흐름: 날짜·참여 팀·메모 확인 → `main`에서 `post/<팀 별칭 소문자>-week-NN` 브랜치(예: `post/teamb-week-01`) → `hugo new content` → 본문 초안(`post-writer`) → `/humanize-korean` → 사진(`tools/strip-metadata.sh`)·영상(`tools/clip.sh`) → `tools/privacy-check.sh` → `naver.md`(`post-writer`) → `fact-checker` → `content-reviewer` → `privacy-reviewer` → 사람 확인 후 push·PR
+- 흐름: 날짜·참여 팀·메모 확인 → `main`에서 `post/<팀 별칭 소문자>-week-NN` 브랜치(예: `post/teamb-week-01`) → `hugo new content` → 본문 초안(`post-writer`) → `/humanize-korean` → 사진(`tools/strip-metadata.sh`)·영상(`tools/clip.sh`) → `tools/privacy-check.sh` → `naver.md`(`post-writer`) → `fact-checker` → `content-reviewer` → `privacy-reviewer` → `/security-review` → 사람 확인 후 push·PR
 - 메모는 `notes/YYYY-MM-DD/` 폴더에 `class.md`(공통: 강의 주제, 수업 흐름, 다음 주 예고)와 팀마다 `<team-id>.md`(예: `team1.md`)로 둔다. 쉰 팀은 파일을 만들지 않는다. 미디어 원본은 `notes/YYYY-MM-DD/media/`에 두고 파일 이름 앞에 팀 id(공통이면 `class-`)를 붙인다. 메모 예시는 `notes.example/2026-10-24/`에 있다.
 - 실명과 가명의 대응은 `.private/roster.yaml`에만 둔다. 다른 파일(글, 주석, scratchpad, 커밋 메시지, PR 본문)에는 남기지 않는다.
 - 발행은 사람이 `hugo server --buildDrafts`로 확인한 뒤, 윤문과 `fact-checker`·`content-reviewer`·`privacy-reviewer`를 한 번 더 거쳐 `draft: false`로 바꾸고 사람이 머지한다.
