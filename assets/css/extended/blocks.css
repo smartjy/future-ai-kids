@@ -200,6 +200,7 @@ a.fk-card:focus-visible {
 .fk-team-yellow .fk-team-link { color: #b9820a; }
 .fk-team-green .fk-team-link { color: var(--fk-green); }
 .fk-team-red .fk-team-link { color: var(--fk-red); }
+.fk-team .fk-team-link.fk-muted { color: var(--fk-muted); }
 
 /* 주차별 기록판 */
 .fk-weeks {
