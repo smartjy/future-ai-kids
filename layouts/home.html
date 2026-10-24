@@ -17,7 +17,12 @@
       {{- range $i, $t := $teams }}
       {{- $mine := where $posts "Params.teams" "intersect" (slice $t.name) }}
       {{- $colour := index $colours (mod $i 4) }}
+      {{- /* 발행된 글이 없는 팀은 팀 페이지가 만들어지지 않으므로 링크를 걸지 않는다 */}}
+      {{- if $mine }}
       <a class="fk-card fk-team fk-team-{{ $colour }}" href="{{ printf "teams/%s/" (urlize $t.name) | relURL }}">
+      {{- else }}
+      <div class="fk-card fk-team fk-team-{{ $colour }}">
+      {{- end }}
         <span class="fk-tile fk-tile-lg fk-{{ $colour }}" aria-hidden="true">{{ $t.emoji }}</span>
         <h3>{{ $t.name }}</h3>
         <p class="fk-muted">{{ $t.intro }}</p>
@@ -32,8 +37,13 @@
             </dd>
           </div>
         </dl>
+        {{- if $mine }}
         <span class="fk-team-link">{{ $t.name }} 기록만 보기 →</span>
       </a>
+        {{- else }}
+        <span class="fk-team-link fk-muted">아직 기록이 없어요</span>
+      </div>
+        {{- end }}
       {{- end }}
     </div>
   </section>
