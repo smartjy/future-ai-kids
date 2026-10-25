@@ -23,7 +23,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), 
   - `<team-id>.md`: 팀마다 한 파일 (`team1.md` 등). 고른 참여 팀과 팀 파일 목록이 맞는지 확인하고, 다르면 묻는다.
 - **미디어 위치**: 사진·영상 원본은 `notes/YYYY-MM-DD/media/`에 둔다. 파일 이름 앞에 팀 id(공통이면 `class-`)를 붙인다. 없으면 글만 쓴다.
 
-주차는 팀별로 센다. `NN`은 `content/posts/*/index.md` 중 front matter `teams`에 그 팀이 들어간 글 수에 1을 더한 두 자리 번호다. (예: TeamA가 두 번 수업했으면 TeamA의 다음 글은 `03`) 한 글에 들어갈 팀들의 주차가 서로 다르면 멈추고 사람에게 묻는다. 같은 날짜의 글 폴더가 이미 있으면 멈추고 사람에게 묻는다.
+주차는 팀별로 센다. `NN`은 `content/posts/*/index.md` 중 front matter `teams`에 그 팀이 들어간 글 수에 1을 더한 두 자리 번호다. (예: Doumy가 두 번 수업했으면 Doumy의 다음 글은 `03`) 한 글에 들어갈 팀들의 주차가 서로 다르면 멈추고 사람에게 묻는다. 같은 날짜의 글 폴더가 이미 있으면 멈추고 사람에게 묻는다.
 
 `notes/`와 `.private/`는 `.gitignore` 대상이다. 메모 내용을 레포의 다른 파일로 옮겨 적지 않는다.
 
@@ -32,7 +32,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), 
 ```bash
 git switch main
 git pull --ff-only
-git switch -c post/<팀 별칭 소문자>-week-NN   # 예: post/teamb-week-01
+git switch -c post/<팀 별칭 소문자>-week-NN   # 예: post/wanted-week-02
 ```
 
 - 작업 트리에 커밋하지 않은 변경이 있으면 멈추고 사람에게 묻는다.

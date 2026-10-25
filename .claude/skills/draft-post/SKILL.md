@@ -17,11 +17,11 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), 
 
 - **브랜치**: 지금 브랜치가 `main`이면 멈추고 사람에게 알린다. (`/weekly-post` 2단계로 `post/<팀 별칭 소문자>-week-NN` 브랜치를 먼저 만든다)
 - **메모**: `notes/YYYY-MM-DD/`에 `class.md`(공통)와 팀 파일 `<team-id>.md`가 있는지 본다. 메모가 없으면 멈춘다.
-- **참여 팀**: 팀 파일 이름을 `data/teams.yaml`의 `id`와 맞춰 참여 팀을 정하고 사람에게 확인받는다. (예: 「team1(TeamA)만 참여, team2는 쉼」) `teams.yaml`에 없는 파일이 있으면 묻는다.
+- **참여 팀**: 팀 파일 이름을 `data/teams.yaml`의 `id`와 맞춰 참여 팀을 정하고 사람에게 확인받는다. (예: 「team1(Doumy)만 참여, team2는 쉼」) `teams.yaml`에 없는 파일이 있으면 묻는다.
 - **명단**: `.private/roster.yaml`이 있는지 본다. 없으면 멈춘다. 내용은 출력하지 않는다.
 - **빈 칸**: 메모의 `[[ ]]` 칸 수를 세어 알려 준다. 많으면 「채우고 진행할지, 빈 채로 진행할지」를 묻는다.
 - **아이들 이야기**: 팀 메모에 아이별 이야기(누가 무엇을 했는지, 한 말, 있었던 일)가 있는지 본다. 없으면 「이대로 쓰면 아이들 이야기가 빠진 글이 된다」고 분명히 말하고, 채울지 묻는다. 채팅으로 받은 내용은 메모 파일에 먼저 적는다.
-- **글 폴더**: `content/posts/YYYY-MM-DD-week-NN/`. 주차는 팀별로 센다. `NN`은 `content/posts/*/index.md` 중 front matter `teams`에 그 팀이 들어간 글 수에 1을 더한 두 자리 번호다. (예: TeamA가 두 번 수업했으면 TeamA의 다음 글은 `03`) 한 글에 들어갈 팀들의 주차가 서로 다르면 멈추고 사람에게 묻는다. 같은 날짜 폴더가 이미 있으면 그 폴더를 다시 쓸지 묻는다. 없으면 만든다.
+- **글 폴더**: `content/posts/YYYY-MM-DD-week-NN/`. 주차는 팀별로 센다. `NN`은 `content/posts/*/index.md` 중 front matter `teams`에 그 팀이 들어간 글 수에 1을 더한 두 자리 번호다. (예: Doumy가 두 번 수업했으면 Doumy의 다음 글은 `03`) 한 글에 들어갈 팀들의 주차가 서로 다르면 멈추고 사람에게 묻는다. 같은 날짜 폴더가 이미 있으면 그 폴더를 다시 쓸지 묻는다. 없으면 만든다.
   ```sh
   hugo new content posts/YYYY-MM-DD-week-NN
   ```
