@@ -57,6 +57,23 @@ body {
     letter-spacing: -0.03em;
 }
 
+/* 메뉴 글씨를 본문 크기·굵기에 맞춘다 (테마 기본 16px 보통 굵기는 로고·본문보다 작고 가늘어 보인다) */
+.menu a {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.menu .active {
+    font-weight: 800;
+}
+
+@media (max-width: 420px) {
+    .menu {
+        column-gap: 16px;
+    }
+}
+
 /* ── 공통 부품 ── */
 .fk-card {
     display: block;
@@ -289,14 +306,6 @@ a.fk-card:focus-visible {
 
 .fk-cell b {
     margin-right: 6px;
-}
-
-.fk-cell-off {
-    color: var(--fk-muted);
-}
-
-.fk-cell-off .fk-dot {
-    opacity: 0.35;
 }
 
 .fk-dot {
