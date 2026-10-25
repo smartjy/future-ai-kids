@@ -3,10 +3,10 @@ title: "2주차 · DOUMY 업그레이드"
 date: 2026-10-25T10:00:00+09:00
 draft: false
 tags: ["AI 동작 원리", "목소리 복제", "게임 만들기"]
-teams: ["TeamA"]
+teams: ["Doumy"]
 summary: "AI가 요청에 어떻게 답하는지 알아보고, 지난주에 만든 게임 DOUMY를 고쳤어요."
 made:
-  TeamA: "게임 DOUMY 업그레이드"
+  Doumy: "게임 DOUMY 업그레이드"
 cover:
   image: "doumy-melee.jpg"
   alt: "뿔 달린 보라색 더미와 캐릭터가 마주 선 DOUMY 게임 화면"
@@ -24,9 +24,9 @@ cover:
 2. 지난주에 한 것을 돌아보고, AI 뉴스를 짧게 살펴봤어요.
 3. AI가 어떻게 동작하는지, 우리가 요청하면 AI가 어떻게 응답하는지 설명을 들었어요.
 4. 지난주에 만든 게임 DOUMY를 고쳤어요.
-5. TeamB가 만든 게임 「현상수배 킬러」를 보면서 새로 만들 앱을 다시 계획해 보기로 했어요.
+5. Wanted가 만든 게임 「현상수배 킬러」를 보면서 새로 만들 앱을 다시 계획해 보기로 했어요.
 
-## 🚀 TeamA
+## 🚀 Doumy
 
 ### 아이들이 만든 것
 
