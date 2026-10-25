@@ -73,20 +73,18 @@
         <p class="fk-week-summary">{{ $p.Summary | plainify }}</p>
         {{- end }}
 
+        {{- /* 팀마다 수업 요일이 달라 글 하나에 모든 팀이 들어가지 않는다. 그 글에 참여한 팀만 보여 준다 */}}
         <ul class="fk-week-teams">
           {{- range $i, $t := $teams }}
+          {{- if in ($p.Params.teams | default slice) $t.name }}
           {{- $colour := index $colours (mod $i 4) }}
-          {{- $joined := in ($p.Params.teams | default slice) $t.name }}
-          <li class="fk-cell{{ if not $joined }} fk-cell-off{{ end }}">
+          <li class="fk-cell">
             <span class="fk-dot fk-{{ $colour }}" aria-hidden="true"></span>
             <span><b>{{ $t.name }}</b>
-              {{- if $joined }}
               {{ with index ($p.Params.made | default dict) $t.name }}{{ . }}{{ else }}참여했어요{{ end }}
-              {{- else }}
-              이번 주는 쉬었어요
-              {{- end }}
             </span>
           </li>
+          {{- end }}
           {{- end }}
         </ul>
       </li>
