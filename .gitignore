@@ -16,6 +16,8 @@ _workspace/
 *.m4v
 *.M4V
 *.MP4
+# core.ignorecase=true면 *.MP4가 소문자 .mp4도 막는다. 글 폴더의 tools/clip.sh 결과물만 예외로 둔다
+!content/posts/**/*.mp4
 # 휴대폰 사진 원본·편집 정보 (글에는 tools/strip-metadata.sh를 거친 jpg/png만 넣는다)
 *.heic
 *.HEIC
