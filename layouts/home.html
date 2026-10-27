@@ -3,101 +3,68 @@
 {{- $teams := where hugo.Data.teams "active" true }}
 {{- $colours := slice "blue" "yellow" "green" "red" }}
 
+{{- /* 막대 칸 수: 가장 많이 수업한 팀의 주차 수 */}}
+{{- $weeks := 0 }}
+{{- range $teams }}
+{{- $n := len (where $posts "Params.teams" "intersect" (slice .name)) }}
+{{- if gt $n $weeks }}{{ $weeks = $n }}{{ end }}
+{{- end }}
+
 <div class="fk-home">
 
-  <section class="fk-intro">
-    <h1>{{ site.Title }}</h1>
-    <p>초등학생 아이들이 팀을 나눠, 매주 AI와 함께 하나씩 만드는 수업 기록이에요.</p>
-  </section>
-
-  {{- /* 1. 팀 카드: 팀마다 몇 주 참여했고 최근에 무엇을 만들었는지 */}}
-  <section class="fk-teams" aria-labelledby="fk-teams-title">
-    <h2 id="fk-teams-title" class="fk-section-title">우리 팀</h2>
-    <div class="fk-team-grid">
+  {{- /* 1. 칠판: 어느 한 팀이 아니라 수업 전체를 한 줄로. 문구는 hugo.yaml params.chalk (없으면 사이트 설명) */}}
+  <section class="fk-board-chalk" aria-labelledby="fk-chalk-title">
+    <h1 class="fk-chalk-site">{{ site.Title }}</h1>
+    <p id="fk-chalk-title" class="fk-chalk-topic">{{ site.Params.chalk | default site.Params.description }}</p>
+    <ul class="fk-chalk-made">
       {{- range $i, $t := $teams }}
-      {{- $mine := where $posts "Params.teams" "intersect" (slice $t.name) }}
-      {{- $colour := index $colours (mod $i 4) }}
-      {{- /* 발행된 글이 없는 팀은 팀 페이지가 만들어지지 않으므로 링크를 걸지 않는다 */}}
-      {{- if $mine }}
-      <a class="fk-card fk-team fk-team-{{ $colour }}" href="{{ printf "teams/%s/" (urlize $t.name) | relURL }}">
-      {{- else }}
-      <div class="fk-card fk-team fk-team-{{ $colour }}">
+      <li><span class="fk-dot fk-{{ index $colours (mod $i 4) }}" aria-hidden="true"></span>{{ $t.name }}</li>
       {{- end }}
-        <span class="fk-tile fk-tile-lg fk-{{ $colour }}" aria-hidden="true">{{ $t.emoji }}</span>
-        <h3>{{ $t.name }}</h3>
-        <p class="fk-muted">{{ $t.intro }}</p>
-        <dl class="fk-team-facts">
-          <div><dt>참여한 주</dt><dd>{{ len $mine }}주</dd></div>
-          <div>
-            <dt>최근에 만든 것</dt>
-            <dd>
-              {{- $made := "" }}
-              {{- range $mine }}{{ if not $made }}{{ with index (.Params.made | default dict) $t.name }}{{ $made = . }}{{ end }}{{ end }}{{ end }}
-              {{- $made | default "아직 없어요" -}}
-            </dd>
-          </div>
-        </dl>
-        {{- if $mine }}
-        <span class="fk-team-link">{{ $t.name }} 기록만 보기 →</span>
-      </a>
-        {{- else }}
-        <span class="fk-team-link fk-muted">아직 기록이 없어요</span>
-      </div>
-        {{- end }}
-      {{- end }}
-    </div>
+    </ul>
+    <a class="fk-chalk-link" href="{{ "about/" | relURL }}">수업 소개 보기</a>
   </section>
 
-  {{- /* 2. 주차별 기록판: 한 줄이 한 주, 팀마다 한 칸 */}}
-  <section class="fk-board" aria-labelledby="fk-board-title">
-    <h2 id="fk-board-title" class="fk-section-title">주차별 기록</h2>
-    <ol class="fk-weeks">
-      {{- range $w, $p := $posts }}
-      {{- $num := replaceRE `^(\d+)주차.*` "$1" $p.Title }}
-      <li class="fk-card fk-week{{ if eq $w 0 }} fk-week-latest{{ end }}">
-        <a class="fk-week-head" href="{{ $p.RelPermalink }}">
-          <span class="fk-tile fk-num" aria-hidden="true">{{ $num }}</span>
-          <span class="fk-week-title">
-            <span class="fk-muted">{{ $num }}주차 · {{ $p.Date.Format "1월 2일" }}{{ if eq $w 0 }} · 가장 최근{{ end }}</span>
-            <b>{{ partial "fk-topic.html" $p | default $p.Title }}</b>
-          </span>
-          <span class="fk-arrow" aria-hidden="true">→</span>
-        </a>
-
-        {{- if eq $w 0 }}
-        {{- with $p.Resources.GetMatch ($p.Params.cover.image | default "") }}
-        <a href="{{ $p.RelPermalink }}" tabindex="-1" aria-hidden="true">
-          <img class="fk-week-img" src="{{ .RelPermalink }}" width="{{ .Width }}" height="{{ .Height }}" alt="">
-        </a>
+  {{- /* 2. 팀별 기록 막대: 팀마다 막대 하나, 한 칸이 한 주. 주차는 팀별로 센다 */}}
+  {{- if gt $weeks 0 }}
+  <section class="fk-chart" aria-labelledby="fk-chart-title" style="--fk-weeks: {{ $weeks }}">
+    <h2 id="fk-chart-title" class="fk-section-title">팀별 기록</h2>
+    <p class="fk-chart-sub">막대 한 칸이 수업 한 주예요. 칸을 누르면 그 주 기록을 볼 수 있어요.</p>
+    <div class="fk-chart-scroll">
+      <div class="fk-chart-axis" aria-hidden="true">
+        {{- range seq $weeks }}
+        <span>{{ . }}주차</span>
         {{- end }}
-        <p class="fk-week-summary">{{ $p.Summary | plainify }}</p>
-        {{- end }}
-
-        {{- /* 팀마다 수업 요일이 달라 글 하나에 모든 팀이 들어가지 않는다. 그 글에 참여한 팀만 보여 준다 */}}
-        <ul class="fk-week-teams">
-          {{- range $i, $t := $teams }}
-          {{- if in ($p.Params.teams | default slice) $t.name }}
-          {{- $colour := index $colours (mod $i 4) }}
-          <li class="fk-cell">
-            <span class="fk-dot fk-{{ $colour }}" aria-hidden="true"></span>
-            <span><b>{{ $t.name }}</b>
-              {{ with index ($p.Params.made | default dict) $t.name }}{{ . }}{{ else }}참여했어요{{ end }}
-            </span>
+      </div>
+      {{- range $i, $t := $teams }}
+      {{- $mine := (where $posts "Params.teams" "intersect" (slice $t.name)).ByDate }}
+      <div class="fk-chart-row fk-team-{{ index $colours (mod $i 4) }}">
+        <p class="fk-chart-name">
+          <span class="fk-dot fk-{{ index $colours (mod $i 4) }}" aria-hidden="true"></span>
+          {{- /* 발행된 글이 없는 팀은 팀 페이지가 만들어지지 않으므로 링크를 걸지 않는다 */}}
+          {{- if $mine }}
+          <a href="{{ printf "teams/%s/" (urlize $t.name) | relURL }}">{{ $t.name }}</a>
+          {{- else }}
+          {{ $t.name }}
+          {{- end }}
+          <span class="fk-chart-count">{{ len $mine }}주</span>
+        </p>
+        <ol class="fk-chart-bar">
+          {{- range $k, $p := $mine }}
+          {{- $made := (index ($p.Params.made | default dict) $t.name) | default "참여했어요" }}
+          <li>
+            <a href="{{ $p.RelPermalink }}" aria-label="{{ $t.name }} {{ add $k 1 }}주차, {{ $p.Date.Format "1월 2일" }}: {{ $made }}">
+              <span class="fk-seg" aria-hidden="true"></span>
+              <span class="fk-seg-made">{{ $made }}</span>
+              <span class="fk-seg-date">{{ $p.Date.Format "1월 2일" }}</span>
+            </a>
           </li>
           {{- end }}
-          {{- end }}
-        </ul>
-      </li>
+        </ol>
+      </div>
       {{- end }}
-    </ol>
-  </section>
-
-  <section class="fk-about" aria-labelledby="fk-about-title">
-    <div class="fk-card fk-about-card">
-      <h2 id="fk-about-title" class="fk-section-title">이 블로그는요</h2>
-      <p>매주 한 번, 초등학생 아이들과 AI 수업을 해요. 아이들은 팀을 나눠 AI에게 일을 시켜 보고, 그 주에 하나씩 무언가를 만들어요.</p>
-      <p>무엇을 배웠는지, 무엇을 만들었는지, 숙제는 무엇이었는지 매주 적어 둬요. 아이들의 얼굴과 진짜 이름은 싣지 않아요.</p>
     </div>
   </section>
+  {{- end }}
+
 </div>
 {{- end }}
