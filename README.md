@@ -1,8 +1,8 @@
 # future-ai-kids
 
-**Future AI Kids** — AI with our kids, 아이들과 AI 기록
+**Future AI Kids** — AI with our kids, 학생들과 AI 기록
 
-초등학생 아이들과 매주 진행하는 AI 수업을 기록하는 블로그입니다.
+학생들과 매주 진행하는 AI 수업을 기록하는 블로그입니다.
 주소: https://smartjy.github.io/future-ai-kids/
 
 - 생성기: [Hugo](https://gohugo.io/) (Apache-2.0) extended 0.168.0
@@ -36,7 +36,7 @@ hugo new content posts/2026-10-24-week-02   # 끝에 /index.md를 붙이지 않�
 
 ## 팀 추가
 
-`data/teams.yaml`에 항목을 하나 추가합니다. `name`에는 아이들이 정한 별칭만 쓰고, 학교명·동네·반 이름은 쓰지 않습니다.
+`data/teams.yaml`에 항목을 하나 추가합니다. `name`에는 학생들이 정한 별칭만 쓰고, 학교명·동네·반 이름은 쓰지 않습니다.
 팀별 글 모음은 `/teams/<별칭>/`에서 볼 수 있습니다.
 
 ## 영상 넣기
@@ -79,7 +79,7 @@ hugo new content posts/2026-10-24-week-02   # 끝에 /index.md를 붙이지 않�
 
 레포에 올라간 것은 히스토리까지 전부 공개됩니다.
 
-1. 금지어 파일을 만듭니다. 아이들 실명, 학교명, 반, 동네 이름을 한 줄에 하나씩 적습니다.
+1. 금지어 파일을 만듭니다. 학생들 실명, 학교명, 반, 동네 이름을 한 줄에 하나씩 적습니다.
    ```sh
    mkdir -p .private && cp .private.example/names.txt .private/names.txt
    ```

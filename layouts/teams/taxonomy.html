@@ -1,0 +1,45 @@
+{{- /* 팀 페이지: 팀마다 리더, 팀원, 프로젝트(가장 최근 글의 made), 수업한 주(발행 글 수). 이름은 data/teams.yaml의 가명만 쓴다 */ -}}
+{{- define "main" }}
+{{- $posts := where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- $teams := where hugo.Data.teams "active" true }}
+{{- $colours := slice "blue" "yellow" "green" "red" }}
+
+<header class="page-header">
+  <h1>{{ .Title }}</h1>
+</header>
+
+<div class="fk-teams">
+  {{- range $i, $t := $teams }}
+  {{- $mine := (where $posts "Params.teams" "intersect" (slice $t.name)).ByDate.Reverse }}
+  <section class="fk-team-card fk-team-{{ index $colours (mod $i 4) }}" aria-labelledby="fk-team-{{ $t.id }}">
+    <h2 id="fk-team-{{ $t.id }}"><span class="fk-dot" aria-hidden="true"></span>{{ $t.emoji }} {{ $t.name }}</h2>
+    <dl>
+      <div>
+        <dt>리더</dt>
+        <dd>{{ $t.leader | default "아직 정하지 않았어요" }}</dd>
+      </div>
+      <div>
+        <dt>팀원</dt>
+        <dd>{{ with $t.members }}{{ delimit . ", " }}{{ else }}아직 없어요{{ end }}</dd>
+      </div>
+      <div>
+        <dt>프로젝트</dt>
+        <dd>
+          {{- with index $mine 0 }}
+          {{- (index (.Params.made | default dict) $t.name) | default .Title }} <span class="fk-team-when">{{ len $mine }}주차, {{ .Date.Format "1월 2일" }}</span>
+          {{- else }}아직 기록이 없어요{{ end -}}
+        </dd>
+      </div>
+      <div>
+        <dt>수업한 주</dt>
+        <dd>{{ len $mine }}주</dd>
+      </div>
+    </dl>
+    {{- /* 발행된 글이 없는 팀은 팀 기록 페이지가 만들어지지 않으므로 링크를 걸지 않는다 */}}
+    {{- if $mine }}
+    <a class="fk-team-records" href="{{ printf "teams/%s/" (urlize $t.name) | relURL }}">{{ $t.name }} 기록 모두 보기</a>
+    {{- end }}
+  </section>
+  {{- end }}
+</div>
+{{- end }}

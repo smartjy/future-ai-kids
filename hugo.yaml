@@ -23,7 +23,9 @@ markup:
       unsafe: false
 
 params:
-  description: AI with our kids — 아이들과 AI 기록
+  # 홈 칠판에 분필 글씨로 쓰는 문구 (모든 팀에 똑같이 해당하는 말로)
+  chalk: 이번 주에는 AI로 무엇을 만들까?
+  description: 학생들이 팀을 이뤄 매주 AI로 하나씩 만들어가는 수업이에요.
   defaultTheme: auto
   ShowReadingTime: true
   ShowToc: true
@@ -35,12 +37,20 @@ params:
   disableSpecial1stPost: false
   homeInfoParams:
     Title: Future AI Kids
-    Content: 초등학생 아이들과 매주 함께하는 AI 수업 기록입니다.
+    Content: 학생들이 팀을 이뤄 매주 AI로 하나씩 만들어가는 수업이에요.
   fuseOpts:
     keys: [title, summary, content]
 
 menu:
   main:
+    - identifier: home
+      name: 홈
+      url: /
+      weight: 1
+    - identifier: about
+      name: 소개
+      url: about/
+      weight: 5
     - identifier: posts
       name: 글
       url: posts/

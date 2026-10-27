@@ -1,42 +1,47 @@
-/* Future AI Kids — 블록 카드 디자인
-   미색 바탕 위 둥근 흰 카드, 파랑·노랑·빨강·초록 색 타일, 굵고 친근한 글씨.
-   한 번에 하나씩 쉽게 읽히도록 카드 하나에 한 가지 내용만 담는다. */
+/* Future AI Kids — 차분한 읽기 중심 디자인
+   흰 바탕, 넓은 여백, 글꼴은 Pretendard 하나. 테두리·그림자·색 칸 장식은 쓰지 않는다.
+   팀 색은 팀 이름 앞의 작은 점에만 쓴다. */
 
 :root {
-    --fk-ground: #f6f5f0;
-    --fk-card: #ffffff;
-    --fk-soft: #f4f3ee;
-    --fk-ink: #1e242b;
-    --fk-muted: #5f6873;
-    --fk-line: #c7cbd2;
+    --fk-ground: #ffffff;
+    --fk-soft: #f4f5f6;
+    --fk-ink: #26282b;
+    --fk-muted: #6b6f76;
+    --fk-line: #e6e7ea;
+    --fk-link: #2f5fb3;
     --fk-blue: #4c86ef;
     --fk-yellow: #f5b62a;
     --fk-red: #e8503c;
     --fk-green: #33a457;
-    --fk-shadow: 0 10px 32px rgba(38, 49, 63, 0.10);
-    --fk-radius: 20px;
-    --fk-margin: clamp(16px, 4vw, 32px);
 
     --theme: var(--fk-ground);
-    --entry: var(--fk-card);
+    --entry: var(--fk-ground);
     --primary: var(--fk-ink);
     --content: var(--fk-ink);
     --secondary: var(--fk-muted);
     --tertiary: var(--fk-soft);
-    --border: var(--fk-soft);
+    --border: var(--fk-line);
     --code-bg: var(--fk-soft);
-    --radius: var(--fk-radius);
-    --main-width: 760px;
+    --radius: 8px;
+    --main-width: 720px;
 }
 
 :root[data-theme="dark"] {
-    --fk-ground: #15181d;
-    --fk-card: #1f242b;
-    --fk-soft: #272d35;
-    --fk-ink: #f1f1ee;
-    --fk-muted: #aab1bb;
-    --fk-line: #3a414b;
-    --fk-shadow: 0 10px 32px rgba(0, 0, 0, 0.35);
+    --fk-ground: #1c1d20;
+    --fk-soft: #26282c;
+    --fk-ink: #e4e5e7;
+    --fk-muted: #9a9ea6;
+    --fk-line: #33363b;
+    --fk-link: #8fb2f2;
+
+    --theme: var(--fk-ground);
+    --entry: var(--fk-ground);
+    --primary: var(--fk-ink);
+    --content: var(--fk-ink);
+    --secondary: var(--fk-muted);
+    --tertiary: var(--fk-soft);
+    --border: var(--fk-line);
+    --code-bg: var(--fk-soft);
 }
 
 body,
@@ -52,6 +57,7 @@ body {
     word-break: keep-all;
 }
 
+/* ── 머리말·메뉴 ── */
 .header-nav .logo a {
     font-weight: 800;
     letter-spacing: -0.03em;
@@ -60,12 +66,13 @@ body {
 /* 메뉴 글씨를 본문 크기·굵기에 맞춘다 (테마 기본 16px 보통 굵기는 로고·본문보다 작고 가늘어 보인다) */
 .menu a {
     font-size: 1.0625rem;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.02em;
 }
 
 .menu .active {
-    font-weight: 800;
+    font-weight: 700;
+    border-bottom: 2px solid currentColor;
 }
 
 @media (max-width: 420px) {
@@ -74,278 +81,285 @@ body {
     }
 }
 
-/* ── 공통 부품 ── */
-.fk-card {
-    display: block;
-    background: var(--fk-card);
-    border-radius: var(--fk-radius);
-    box-shadow: var(--fk-shadow);
-    color: var(--fk-ink);
+/* ── 공통 ── */
+.fk-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border-radius: 50%;
+    vertical-align: 0.15em;
 }
 
-a.fk-card {
-    transition: transform 160ms ease, box-shadow 160ms ease;
-}
-
-a.fk-card:hover,
-a.fk-card:focus-visible {
-    transform: translateY(-3px);
-    box-shadow: 0 16px 40px rgba(38, 49, 63, 0.16);
-}
-
-.fk-tile {
-    flex: none;
-    display: inline-grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 11px;
-    color: #fff;
-    font-weight: 800;
-}
-
-.fk-blue,   .fk-c0 { background: var(--fk-blue); }
-.fk-yellow, .fk-c1 { background: var(--fk-yellow); }
-.fk-green,  .fk-c2 { background: var(--fk-green); }
-.fk-red,    .fk-c3 { background: var(--fk-red); }
-
-.fk-muted {
-    color: var(--fk-muted);
-}
+.fk-blue   { background: var(--fk-blue); }
+.fk-yellow { background: var(--fk-yellow); }
+.fk-green  { background: var(--fk-green); }
+.fk-red    { background: var(--fk-red); }
 
 .fk-section-title {
-    font-size: 1.375rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    margin: 0 0 16px;
-}
-
-.fk-button {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 12px 20px;
-    border-radius: 12px;
-    background: var(--fk-blue);
-    color: #fff;
+    font-size: 1.25rem;
     font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 16px;
 }
 
 /* ── 홈 ── */
 .fk-home {
     display: grid;
-    gap: clamp(40px, 6vw, 64px);
-    padding: clamp(24px, 5vw, 56px) 0 clamp(48px, 8vw, 96px);
+    gap: clamp(48px, 8vw, 72px);
+    padding: clamp(32px, 6vw, 64px) 0 clamp(48px, 8vw, 96px);
 }
 
-.fk-intro h1 {
-    font-size: clamp(2.5rem, 1.6rem + 4vw, 4rem);
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 1.05;
-    margin: 0 0 12px;
+/* 기록 표가 넓어져도 페이지가 아니라 표만 옆으로 밀리게 */
+.fk-home > * {
+    min-width: 0;
 }
 
-.fk-intro p {
-    font-size: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
-    color: var(--fk-muted);
-    margin: 0;
+/* 칠판: 홈에서 색을 쓰는 곳은 여기 하나다. 밝은·어두운 화면 모두 같은 칠판 */
+.fk-board-chalk {
+    --fk-chalk: #f1efe6;
+    --fk-chalk-yellow: #f0d77a;
+    position: relative;
+    padding: clamp(24px, 5vw, 44px) clamp(20px, 5vw, 44px) clamp(28px, 5vw, 48px);
+    margin-bottom: 14px;
+    border-radius: 6px;
+    background-color: #2f4a3d;
+    /* 분필 가루가 남은 듯 옅은 얼룩 */
+    background-image:
+        radial-gradient(ellipse at 20% 30%, rgba(255, 255, 255, 0.06), transparent 45%),
+        radial-gradient(ellipse at 75% 70%, rgba(255, 255, 255, 0.05), transparent 50%),
+        radial-gradient(ellipse at 60% 15%, rgba(255, 255, 255, 0.04), transparent 35%);
+    box-shadow: inset 0 0 0 8px #6f5238, inset 0 0 0 10px #5a4230;
+    color: var(--fk-chalk);
 }
 
-/* 팀 카드 두 장 */
-.fk-team-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px;
+/* 분필받이 */
+.fk-board-chalk::after {
+    content: "";
+    position: absolute;
+    left: 6%;
+    right: 6%;
+    bottom: -14px;
+    height: 10px;
+    border-radius: 0 0 4px 4px;
+    background: #6f5238;
 }
 
-.fk-team {
-    padding: 24px;
-    display: grid;
-    align-content: start;
-    gap: 6px;
-}
-
-.fk-tile-lg {
-    width: 52px;
-    height: 52px;
-    border-radius: 14px;
-    font-size: 1.5rem;
-    margin-bottom: 8px;
-}
-
-.fk-team h3 {
-    font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    margin: 0;
-}
-
-.fk-team > p {
-    margin: 0;
-}
-
-.fk-team-facts {
-    margin: 14px 0 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-}
-
-.fk-team-facts > div {
-    background: var(--fk-soft);
-    border-radius: 12px;
-    padding: 10px 12px;
-}
-
-.fk-team-facts dt {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--fk-muted);
-}
-
-.fk-team-facts dd {
-    margin: 2px 0 0;
-    font-weight: 700;
-}
-
-.fk-team-link {
-    margin-top: 12px;
-    font-weight: 700;
-}
-
-.fk-team-blue .fk-team-link { color: var(--fk-blue); }
-.fk-team-yellow .fk-team-link { color: #b9820a; }
-.fk-team-green .fk-team-link { color: var(--fk-green); }
-.fk-team-red .fk-team-link { color: var(--fk-red); }
-.fk-team .fk-team-link.fk-muted { color: var(--fk-muted); }
-
-/* 주차별 기록판 */
-.fk-weeks {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 12px;
-}
-
-.fk-week {
-    margin: 0;
-    overflow: hidden;
-}
-
-.fk-week-head {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 16px 18px 12px;
-}
-
-.fk-num {
-    background: var(--fk-ink);
-    color: var(--fk-card);
-}
-
-.fk-week-title {
-    flex: 1;
+.fk-chalk-site {
     display: grid;
     gap: 2px;
-}
-
-.fk-week-title .fk-muted {
-    font-size: 0.875rem;
-    font-weight: 600;
-}
-
-.fk-week-title b {
-    font-size: 1.0625rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1.35;
-}
-
-.fk-week-latest .fk-week-title b {
-    font-size: clamp(1.25rem, 1.05rem + 1vw, 1.625rem);
-}
-
-.fk-week-latest .fk-num {
-    background: var(--fk-blue);
-    color: #fff;
-}
-
-.fk-week-img {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 5 / 2;
-    object-fit: cover;
-}
-
-.fk-week-summary {
-    margin: 14px 18px 0;
-    line-height: 1.6;
-}
-
-.fk-week-teams {
-    list-style: none;
-    margin: 0;
-    padding: 12px 18px 18px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 8px;
-}
-
-.fk-cell {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0;
-    padding: 10px 12px;
-    border-radius: 12px;
-    background: var(--fk-soft);
-}
-
-.fk-cell b {
-    margin-right: 6px;
-}
-
-.fk-dot {
-    flex: none;
-    width: 12px;
-    height: 12px;
-    border-radius: 4px;
-}
-
-.fk-week:has(.fk-week-head:hover) {
-    transform: translateY(-2px);
-}
-
-.fk-week {
-    transition: transform 160ms ease;
-}
-
-.fk-more {
-    display: inline-block;
-    margin-top: 16px;
+    margin: 0 0 clamp(20px, 4vw, 32px);
+    font-size: 1rem;
     font-weight: 700;
-    color: var(--fk-blue);
+    letter-spacing: -0.01em;
+    color: var(--fk-chalk);
 }
 
-/* 소개 */
-.fk-about-card {
-    padding: clamp(20px, 4vw, 32px);
-    line-height: 1.7;
+.fk-chalk-topic,
+.fk-chalk-made {
+    font-family: "Nanum Pen Script", "Pretendard Variable", Pretendard, cursive;
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.35);
 }
 
-.fk-about-card p {
-    margin: 0 0 12px;
+.fk-chalk-topic {
+    max-width: 15em;
+    margin: 0 0 20px;
+    font-size: clamp(2.25rem, 1.5rem + 3vw, 3.25rem);
+    line-height: 1.2;
 }
 
+.fk-chalk-made {
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+    font-size: clamp(1.5rem, 1.25rem + 0.8vw, 1.875rem);
+    line-height: 1.3;
+}
+
+/* 팀 이름은 나란히: 어느 팀도 앞세우지 않는다 */
+.fk-chalk-made li {
+    display: inline-block;
+    margin: 0 20px 0 0;
+}
+
+.fk-chalk-link {
+    display: inline-block;
+    font-weight: 600;
+    color: var(--fk-chalk);
+    text-decoration: underline;
+    text-decoration-color: var(--fk-chalk-yellow);
+    text-underline-offset: 5px;
+}
+
+.fk-chalk-link:focus-visible {
+    outline-color: var(--fk-chalk-yellow);
+}
+
+/* 팀별 기록 막대
+   팀 색은 막대에만 쓴다. 노랑은 흰 바탕에서 너무 밝아 한 단계 진하게 (dataviz 검증기 통과 값) */
+.fk-team-blue   { --fk-bar: #4c86ef; }
+.fk-team-yellow { --fk-bar: #c98a00; }
+.fk-team-green  { --fk-bar: var(--fk-green); }
+.fk-team-red    { --fk-bar: var(--fk-red); }
+
+:root[data-theme="dark"] .fk-team-yellow { --fk-bar: #bd8400; }
+
+.fk-chart-sub {
+    margin: -8px 0 20px;
+    color: var(--fk-muted);
+}
+
+.fk-chart-scroll {
+    --fk-col: minmax(8.5rem, 1fr);
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.fk-chart-axis,
+.fk-chart-row {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    column-gap: 16px;
+}
+
+.fk-chart-axis {
+    grid-template-columns: 6.5rem repeat(var(--fk-weeks), var(--fk-col));
+    column-gap: 2px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--fk-line);
+    font-size: 0.8125rem;
+    color: var(--fk-muted);
+}
+
+.fk-chart-axis span:first-child {
+    grid-column: 2;
+}
+
+.fk-chart-row {
+    grid-template-columns: 6.5rem repeat(var(--fk-weeks), var(--fk-col));
+    column-gap: 2px;
+    align-items: start;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--fk-line);
+}
+
+.fk-chart-name {
+    margin: 0;
+    padding-right: 14px;
+    font-weight: 600;
+    line-height: 24px;
+    white-space: nowrap;
+}
+
+/* 범례 점은 막대와 같은 색 */
+.fk-chart-name .fk-dot {
+    background: var(--fk-bar);
+}
+
+.fk-chart-name a {
+    color: var(--fk-ink);
+}
+
+.fk-chart-name a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.fk-chart-count {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--fk-muted);
+}
+
+/* 막대는 칸마다 2px 바탕색 틈으로 나누고, 끝 칸만 4px 둥글게 */
+.fk-chart-bar {
+    display: contents;
+    list-style: none;
+}
+
+.fk-chart-bar li {
+    margin: 0;
+    min-width: 0;
+}
+
+.fk-chart-bar a {
+    display: grid;
+    gap: 2px;
+    color: var(--fk-ink);
+}
+
+.fk-seg {
+    display: block;
+    height: 24px;
+    margin-bottom: 8px;
+    background: var(--fk-bar);
+}
+
+.fk-chart-bar li:last-child .fk-seg {
+    border-radius: 0 4px 4px 0;
+}
+
+.fk-seg-made {
+    padding-right: 10px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.fk-seg-date {
+    font-size: 0.8125rem;
+    color: var(--fk-muted);
+}
+
+.fk-chart-bar a:hover .fk-seg,
+.fk-chart-bar a:focus-visible .fk-seg {
+    filter: brightness(0.88);
+}
+
+.fk-chart-bar a:hover .fk-seg-made {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* 좁은 화면: 팀 이름을 막대 위로 올려 막대가 넓게 쓰이게 */
+@media (max-width: 560px) {
+    .fk-chart-scroll {
+        --fk-col: minmax(8rem, 1fr);
+    }
+
+    .fk-chart-axis,
+    .fk-chart-row {
+        grid-template-columns: repeat(var(--fk-weeks), var(--fk-col));
+    }
+
+    .fk-chart-axis span:first-child {
+        grid-column: 1;
+    }
+
+    .fk-chart-name {
+        grid-column: 1 / -1;
+        margin-bottom: 10px;
+    }
+
+    .fk-chart-count {
+        display: inline;
+        margin-left: 6px;
+    }
+}
+
+.fk-home a:focus-visible {
+    outline: 2px solid var(--fk-link);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
 
 /* ── 글 페이지 ── */
 .post-title {
     font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 1.2;
+    letter-spacing: -0.035em;
+    line-height: 1.3;
 }
 
 .post-meta,
@@ -353,17 +367,16 @@ a.fk-card:focus-visible {
     color: var(--fk-muted);
 }
 
-/* 목차를 카드로: 글 첫머리에서 어디로 갈지 바로 고른다 */
-.toc {
-    background: var(--fk-card);
+/* 목차 (테마의 details.toc보다 앞서도록 같은 선택자를 쓴다) */
+details.toc {
+    background: var(--fk-soft);
     border: 0;
-    border-radius: var(--fk-radius);
-    box-shadow: var(--fk-shadow);
-    padding: 16px 20px;
+    border-radius: 8px;
+    padding: 12px 16px;
 }
 
 .toc summary {
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .toc ul {
@@ -372,57 +385,36 @@ a.fk-card:focus-visible {
 }
 
 .toc .inner > ul > li > a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 0;
-    font-weight: 600;
+    display: block;
+    padding: 4px 0;
 }
-
-.toc .inner > ul > li > a::before {
-    content: "";
-    flex: none;
-    width: 14px;
-    height: 14px;
-    border-radius: 4px;
-    background: var(--fk-blue);
-}
-
-.toc .inner > ul > li:nth-child(4n+2) > a::before { background: var(--fk-yellow); }
-.toc .inner > ul > li:nth-child(4n+3) > a::before { background: var(--fk-green); }
-.toc .inner > ul > li:nth-child(4n+4) > a::before { background: var(--fk-red); }
 
 .toc .inner ul ul {
-    padding-left: 24px;
+    padding-left: 16px;
 }
 
 .post-content {
-    line-height: 1.75;
+    line-height: 1.85;
 }
 
-/* 섹션 제목마다 색 타일: 지금 어느 칸을 읽는지 알 수 있게 */
 .post-content h2 {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: clamp(1.375rem, 1.1rem + 1vw, 1.75rem);
-    font-weight: 800;
+    font-size: clamp(1.3125rem, 1.15rem + 0.6vw, 1.5rem);
+    font-weight: 700;
     letter-spacing: -0.03em;
-    margin-top: 2.2em;
+    line-height: 1.4;
+    margin-top: 2.4em;
 }
 
-.post-content h2::before {
+/* 섹션 제목 아래 짧은 분필 밑줄: 홈 칠판과 이어지게 */
+.post-content h2::after {
     content: "";
-    flex: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 6px;
-    background: var(--fk-blue);
+    display: block;
+    width: 36px;
+    height: 4px;
+    margin-top: 10px;
+    border-radius: 2px;
+    background: #e9c45a;
 }
-
-.post-content h2:nth-of-type(4n+2)::before { background: var(--fk-yellow); }
-.post-content h2:nth-of-type(4n+3)::before { background: var(--fk-green); }
-.post-content h2:nth-of-type(4n+4)::before { background: var(--fk-red); }
 
 .post-content h3 {
     font-weight: 700;
@@ -435,76 +427,285 @@ a.fk-card:focus-visible {
 
 .post-content img,
 .entry-cover img {
-    border-radius: 16px;
+    border-radius: 8px;
 }
 
 .post-content a {
     box-shadow: none;
-    color: var(--fk-blue);
+    color: var(--fk-link);
     text-decoration: underline;
     text-underline-offset: 3px;
 }
 
 .post-content blockquote {
-    background: var(--fk-card);
-    border: 0;
-    border-radius: 16px;
-    box-shadow: var(--fk-shadow);
-    padding: 16px 20px;
+    border-inline-start: 3px solid var(--fk-line);
+    padding: 2px 0 2px 16px;
+    color: var(--fk-muted);
 }
 
-@media (prefers-reduced-motion: reduce) {
-    a.fk-card {
-        transition: none;
-    }
-}
-
-/* ── 전체 기록(글 목록) 페이지: 홈과 같은 카드 ── */
+/* ── 글 목록·팀·태그 페이지: 작은 썸네일 한 줄 목록 ──
+   글이 늘어도 스크롤이 길어지지 않게 대표 사진을 썸네일로 줄이고 요약은 두 줄까지만 */
 .post-entry {
-    background: var(--fk-card);
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    grid-template-areas:
+        "cover header"
+        "cover content"
+        "cover footer";
+    grid-template-rows: auto auto 1fr;
+    column-gap: 20px;
+    align-items: start;
+    background: transparent;
     border: 0;
-    border-radius: var(--fk-radius);
-    box-shadow: var(--fk-shadow);
+    border-bottom: 1px solid var(--fk-line);
+    border-radius: 0;
     padding: 0 0 20px;
-    overflow: hidden;
-    transition: transform 160ms ease, box-shadow 160ms ease;
+    margin-bottom: 20px;
 }
 
-.post-entry:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 16px 40px rgba(38, 49, 63, 0.16);
+.post-entry:hover .entry-header h2 {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 5px;
+}
+
+/* 사진이 없는 글은 글자만 한 줄로 */
+.post-entry:not(:has(.entry-cover)) {
+    grid-template-columns: 1fr;
+    grid-template-areas: "header" "content" "footer";
 }
 
 .post-entry .entry-cover {
-    margin: 0 0 16px;
+    grid-area: cover;
+    margin: 0;
 }
 
 .post-entry .entry-cover img {
-    border-radius: 0;
-    aspect-ratio: 2 / 1;
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
     object-fit: cover;
+    border-radius: 6px;
 }
 
-.post-entry .entry-header,
-.post-entry .entry-content,
-.post-entry .entry-footer {
-    padding: 0 20px;
+.post-entry .entry-header {
+    grid-area: header;
 }
 
 .post-entry .entry-header h2 {
-    font-weight: 800;
-    letter-spacing: -0.03em;
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.4;
+}
+
+.post-entry .entry-content {
+    grid-area: content;
+    margin: 4px 0 6px;
+}
+
+.post-entry .entry-content p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+
+.post-entry .entry-footer {
+    grid-area: footer;
+    font-size: 0.8125rem;
+}
+
+@media (max-width: 560px) {
+    .post-entry {
+        grid-template-columns: 6rem 1fr;
+        column-gap: 14px;
+    }
+
+    .post-entry .entry-header h2 {
+        font-size: 1rem;
+    }
+}
+
+/* ── 글 본문의 사진·영상: 화면을 다 덮지 않게 높이를 제한하고 비율은 그대로 ── */
+.post-single .entry-cover img {
+    width: 100%;
+    max-height: 340px;
+    object-fit: cover;
+}
+
+/* 영상 상자가 영상보다 넓어지지 않게 */
+.post-content figure.clip {
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+}
+
+.post-content img,
+.post-content figure.clip video,
+.post-content figure.clip img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: min(420px, 60vh);
+    margin-inline: auto;
 }
 
 /* 글 아래 이전·다음 기록 */
 .paginav {
     border: 0;
+    border-top: 1px solid var(--fk-line);
+    border-radius: 0;
     background: transparent;
-    gap: 12px;
 }
 
-.paginav a {
-    background: var(--fk-card);
-    border-radius: 16px;
-    box-shadow: var(--fk-shadow);
+/* ── 팀 페이지: 팀마다 구성원과 최근에 만든 것 ── */
+.fk-teams {
+    display: grid;
+    gap: 0;
+}
+
+.fk-team-card {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--fk-line);
+}
+
+.fk-team-card:first-child {
+    padding-top: 0;
+}
+
+.fk-team-card h2 {
+    font-size: 1.375rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin: 0 0 16px;
+}
+
+.fk-team-card .fk-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--fk-bar);
+}
+
+.fk-team-card dl {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: 10px 16px;
+    margin: 0 0 16px;
+}
+
+.fk-team-card dl > div {
+    display: contents;
+}
+
+.fk-team-card dt {
+    color: var(--fk-muted);
+}
+
+.fk-team-card dd {
+    margin: 0;
+    font-weight: 600;
+}
+
+.fk-team-when {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--fk-muted);
+}
+
+.fk-team-records {
+    color: var(--fk-link);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* ── 팀·태그 목록 ── */
+.terms-tags a {
+    background: var(--fk-soft);
+    border-radius: 999px;
+    padding: 4px 14px;
+}
+
+.terms-tags a:hover {
+    background: var(--fk-line);
+}
+
+/* ── 검색 ── */
+.searchbox input {
+    border: 1px solid var(--fk-line);
+    border-radius: 8px;
+    padding: 10px 14px;
+}
+
+.searchResults li {
+    border: 0;
+    border-bottom: 1px solid var(--fk-line);
+    border-radius: 0;
+    background: transparent;
+}
+
+/* ── 누르는 효과: 누르는 동안 살짝 작아지고 옅은 바탕이 생긴다 ── */
+.menu a,
+.logo a,
+#theme-toggle,
+.fk-chalk-link,
+.fk-chart-bar a,
+.fk-team-records,
+.terms-tags a,
+.paginav a,
+.post-entry {
+    transition: transform 90ms ease, background-color 90ms ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.menu a {
+    display: inline-block;
+    padding: 2px 6px;
+    margin: 0 -6px;
+    border-radius: 6px;
+}
+
+.menu a:active,
+.logo a:active,
+#theme-toggle:active,
+.fk-team-records:active,
+.terms-tags a:active,
+.paginav a:active {
+    transform: scale(0.94);
+    background-color: var(--fk-soft);
+}
+
+.fk-chalk-link:active {
+    transform: scale(0.96);
+}
+
+.fk-chart-bar a:active {
+    transform: scale(0.97);
+}
+
+.fk-chart-bar a:active .fk-seg {
+    filter: brightness(0.8);
+}
+
+.post-entry:active {
+    transform: scale(0.99);
+    background-color: var(--fk-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .menu a:active,
+    .logo a:active,
+    #theme-toggle:active,
+    .fk-chalk-link:active,
+    .fk-chart-bar a:active,
+    .fk-team-records:active,
+    .terms-tags a:active,
+    .paginav a:active,
+    .post-entry:active {
+        transform: none;
+    }
 }
