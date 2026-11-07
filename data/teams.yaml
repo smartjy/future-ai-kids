@@ -16,3 +16,10 @@
   active: true
   leader: 윤현준
   members: [손하윤, 임라온, 한지아]
+- id: team3
+  name: Team C
+  emoji: "🎮"
+  intro: 세 번째 팀
+  active: true
+  leader: 없어요 (리더 없이 함께 운영해요)
+  members: [박선우, 정규선]
