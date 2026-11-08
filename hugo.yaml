@@ -55,6 +55,10 @@ menu:
       name: 글
       url: posts/
       weight: 10
+    - identifier: calendar
+      name: 달력
+      url: calendar/
+      weight: 15
     - identifier: teams
       name: 팀
       url: teams/
