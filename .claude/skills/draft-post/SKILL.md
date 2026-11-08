@@ -16,7 +16,8 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), 
 ## 1. 준비
 
 - **브랜치**: 지금 브랜치가 `main`이면 멈추고 사람에게 알린다. (`/weekly-post` 2단계로 `post/<팀 별칭 소문자>-week-NN` 브랜치를 먼저 만든다)
-- **메모**: `notes/YYYY-MM-DD/`에 `class.md`(공통)와 팀 파일 `<team-id>.md`가 있는지 본다. 메모가 없으면 멈춘다.
+- **메모**: `notes/YYYY-MM-DD/`에 `class.md`(공통)와 팀 파일 `<team-id>.md`, 또는 수업 정리 요약 `summary-<도구>.md`가 있는지 본다. 사람이 요약을 채팅에 붙여 넣었으면 이 이름으로 먼저 저장한다. 요약만 있으면 어느 팀 수업인지 확인받아 파일 머리에 적는다. 메모가 없으면 멈춘다.
+- **게임 영상**: 글에는 정리한 수업 내용과 그 주 게임 영상이 함께 들어간다. 참여 팀마다 `notes/YYYY-MM-DD/media/`에 게임 화면 녹화(`<team-id>-game.*`, mp4/webm/mov)가 있는지 직접 본다. 없으면 「<팀 별칭>의 게임 화면 녹화가 없어요. 넣어 주실 수 있나요?」라고 구체적으로 묻는다. 사람이 그 주에 영상이 없다고 확인한 팀만 영상 없이 쓴다. 녹음 앱의 소리 파일(`audio.mp4` 등)은 영상으로 치지 않는다.
 - **참여 팀**: 팀 파일 이름을 `data/teams.yaml`의 `id`와 맞춰 참여 팀을 정하고 사람에게 확인받는다. (예: 「team1(Doumy)만 참여, team2는 쉼」) `teams.yaml`에 없는 파일이 있으면 묻는다.
 - **명단**: `.private/roster.yaml`이 있는지 본다. 없으면 멈춘다. 내용은 출력하지 않는다.
 - **빈 칸**: 메모의 `[[ ]]` 칸 수를 세어 알려 준다. 많으면 「채우고 진행할지, 빈 채로 진행할지」를 묻는다.
@@ -25,6 +26,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), 
   ```sh
   hugo new content posts/YYYY-MM-DD-week-NN
   ```
+- **영상 만들기**: 초안을 맡기기 전에 게임 영상을 `/weekly-post` 6단계대로 글 폴더에 만든다. 녹화본이 없으면 6단계 「게임 영상 녹화」대로 AI 앱의 게임을 받아 세션이 직접 녹화하고, 녹화 경위를 팀 메모에 적는다. `post-writer`에는 `/weekly-post` 4단계의 영상 관련 지시(수업 뒤 녹화임을 밝히기, 게임 설명은 프레임 근거, 제목·`made`에 게임 이름, 프레임 `cover`)를 함께 넘긴다. (`tools/clip.sh --preview`로 프레임을 먼저 보고 얼굴·이름표·계정명·반사를 확인한다. 4초 이하는 GIF, 길면 MP4, 소리는 항상 뺀다) 대표 이미지로 쓸 jpg도 함께 만든다. 이렇게 해야 `post-writer`가 팀 섹션에 `clip` shortcode와 `cover`를 넣는다.
 
 ## 2. 초안 — `post-writer`
 
@@ -81,7 +83,7 @@ hugo --gc --minify --printPathWarnings --buildDrafts --destination "$(mktemp -d)
 - **사람이 정할 것**: 메모의 빈 칸, 메모에 없지만 사실일 수 있는 내용, 문체·섹션 선택 같은 결정
 - **홈 화면**: 이 글이 홈의 주차별 기록판에서 어떻게 보이는지(주제 = 첫 `##` 제목, `made`, `summary`, 대표 사진)도 함께 확인한다.
 - **미리 보기**: `hugo server --buildDrafts` → `http://localhost:1313/future-ai-kids/posts/YYYY-MM-DD-week-NN/`
-- **다음 단계**: 사진·영상 추가(`/weekly-post` 6단계), `privacy-reviewer`, 커밋·PR(`/weekly-post` 10~11단계)
+- **다음 단계**: (영상 없이 쓴 팀이 있으면) 영상 추가(`/weekly-post` 6단계), `privacy-reviewer`, 커밋·PR(`/weekly-post` 10~11단계)
 
 사람이 고칠 점을 말하면 같은 흐름으로 반영한다. 고친 범위에 따라 2단계(다시 쓰기) 또는 바로 수정 → 3~6단계를 다시 거친다.
 
