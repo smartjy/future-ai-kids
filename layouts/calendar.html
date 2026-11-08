@@ -1,5 +1,6 @@
 {{- define "main" }}
-{{- /* 수업 달력: 발행된 글의 날짜로 만든다. 따로 적는 일정은 없다 (지난 기록만) */}}
+{{- /* 수업 달력: 발행된 글의 날짜와 data/holidays.yaml(공휴일)로 만든다. 따로 적는 수업 일정은 없다 (지난 기록만)
+       화면은 assets/js/calendar.js가 그린다 (주·월·년 보기, 이전·다음). 스크립트가 없으면 아래 목록만 보인다 */}}
 {{- $posts := (where site.RegularPages "Type" "in" site.Params.mainSections).ByDate }}
 {{- $teams := where hugo.Data.teams "active" true }}
 {{- $colours := slice "blue" "yellow" "green" "red" }}
@@ -10,12 +11,20 @@
 {{- $colourOf = merge $colourOf (dict $t.name (index $colours (mod $i 4))) }}
 {{- end }}
 
-{{- /* 날짜(2006-01-02) → 그날 글 목록 */}}
-{{- $byDay := dict }}
+{{- /* 스크립트에 넘길 데이터: 글은 날짜·팀·제목·주소만 */}}
+{{- $items := slice }}
 {{- range $posts }}
-{{- $k := .Date.Format "2006-01-02" }}
-{{- $byDay = merge $byDay (dict $k ((index $byDay $k | default slice) | append .)) }}
+{{- $ts := slice }}
+{{- range (.Params.teams | default slice) }}
+{{- $ts = $ts | append (dict "n" . "c" (index $colourOf . | default "blue")) }}
 {{- end }}
+{{- $items = $items | append (dict "d" (.Date.Format "2006-01-02") "t" $ts "title" .Title "url" .RelPermalink) }}
+{{- end }}
+{{- $hols := slice }}
+{{- range (hugo.Data.holidays | default slice) }}
+{{- $hols = $hols | append (dict "d" (time.Format "2006-01-02" .date) "n" .name) }}
+{{- end }}
+{{- $data := dict "posts" $items "holidays" $hols }}
 
 <article class="post-single fk-cal-page">
   <header class="post-header">
@@ -23,97 +32,54 @@
     {{- with .Summary }}<p class="fk-cal-lead">{{ . | plainify }}</p>{{ end }}
   </header>
 
-  {{- if not $posts }}
-  <p class="fk-cal-empty">아직 올라온 수업 기록이 없어요.</p>
-  {{- else }}
+  <div id="fk-cal" class="fk-cal" hidden>
+    <div class="fk-cal-bar">
+      <div class="fk-cal-nav">
+        <button type="button" class="fk-cal-btn fk-cal-arrow" data-nav="-1" aria-label="이전 달">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <h2 class="fk-cal-title" aria-live="polite"></h2>
+        <button type="button" class="fk-cal-btn fk-cal-arrow" data-nav="1" aria-label="다음 달">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button type="button" class="fk-cal-btn fk-cal-today-btn" data-nav="0">오늘</button>
+      </div>
+      <div class="fk-cal-views" role="group" aria-label="보기">
+        <button type="button" class="fk-cal-btn" data-view="week" aria-pressed="false">주</button>
+        <button type="button" class="fk-cal-btn" data-view="month" aria-pressed="true">월</button>
+        <button type="button" class="fk-cal-btn" data-view="year" aria-pressed="false">년</button>
+      </div>
+    </div>
 
-  <ul class="fk-cal-legend" aria-label="팀 색">
-    {{- range $i, $t := $teams }}
-    <li><span class="fk-dot fk-{{ index $colours (mod $i 4) }}" aria-hidden="true"></span>{{ $t.name }}</li>
+    <ul class="fk-cal-legend" aria-label="표시">
+      {{- range $i, $t := $teams }}
+      <li><span class="fk-dot fk-{{ index $colours (mod $i 4) }}" aria-hidden="true"></span>{{ $t.name }}</li>
+      {{- end }}
+      <li class="fk-cal-legend-hol"><span class="fk-cal-hol-mark" aria-hidden="true">●</span>공휴일</li>
+    </ul>
+
+    <div class="fk-cal-body"></div>
+    <p class="fk-cal-note">← → 키로도 넘길 수 있어요. 공휴일은 우주항공청 월력요항 기준이에요.</p>
+  </div>
+
+  {{- /* 스크립트가 없을 때: 모든 수업 목록 */}}
+  <ul class="fk-cal-list fk-cal-fallback">
+    {{- range $posts.Reverse }}
+    {{- $p := . }}
+    <li>
+      <a href="{{ $p.RelPermalink }}">
+        <span class="fk-cal-list-date">{{ $p.Date.Format "1월 2일" }}</span>
+        {{- range ($p.Params.teams | default slice) }}
+        <span class="fk-cal-list-team"><span class="fk-dot fk-{{ index $colourOf . | default "blue" }}" aria-hidden="true"></span>{{ . }}</span>
+        {{- end }}
+        <span class="fk-cal-list-title">{{ $p.Title }}</span>
+      </a>
+    </li>
     {{- end }}
   </ul>
 
-  {{- /* 첫 글이 있는 달부터 마지막 글이 있는 달까지, 최근 달이 위로 */}}
-  {{- $first := (index $posts 0).Date }}
-  {{- $last := (index $posts (sub (len $posts) 1)).Date }}
-  {{- $start := time.AsTime (printf "%d-%02d-01T00:00:00+09:00" $first.Year (int $first.Month)) }}
-  {{- $end := time.AsTime (printf "%d-%02d-01T00:00:00+09:00" $last.Year (int $last.Month)) }}
-  {{- $months := slice }}
-  {{- $m := $start }}
-  {{- range seq 120 }}
-  {{- if le $m.Unix $end.Unix }}
-  {{- $months = $months | append $m }}
-  {{- $m = $m.AddDate 0 1 0 }}
-  {{- end }}
-  {{- end }}
-
-  {{- range $mi, $month := $months | collections.Reverse }}
-  {{- $days := ($month.AddDate 0 1 -1).Day }}
-  {{- $lead := int $month.Weekday }}
-  {{- $label := printf "%d년 %d월" $month.Year (int $month.Month) }}
-  {{- $id := printf "fk-cal-%s" ($month.Format "2006-01") }}
-  {{- $inMonth := slice }}
-  <section class="fk-cal-month" aria-labelledby="{{ $id }}">
-    <h2 id="{{ $id }}" class="fk-section-title">{{ $label }}</h2>
-
-    <div class="fk-cal-grid" role="grid" aria-labelledby="{{ $id }}">
-      <div class="fk-cal-row fk-cal-head" role="row">
-        {{- range slice "일" "월" "화" "수" "목" "금" "토" }}
-        <span class="fk-cal-wd" role="columnheader">{{ . }}</span>
-        {{- end }}
-      </div>
-      {{- $cells := add $lead $days }}
-      {{- $rows := div (add $cells 6) 7 }}
-      {{- range $r := seq 0 (sub $rows 1) }}
-      <div class="fk-cal-row" role="row">
-        {{- range $c := seq 0 6 }}
-        {{- $n := sub (add (mul $r 7) $c) (sub $lead 1) }}
-        {{- if or (lt $n 1) (gt $n $days) }}
-        <span class="fk-cal-day fk-cal-blank" role="gridcell"></span>
-        {{- else }}
-        {{- $key := printf "%s-%02d" ($month.Format "2006-01") $n }}
-        {{- $here := index $byDay $key }}
-        {{- if $here }}
-        {{- $inMonth = $inMonth | append $here }}
-        <span class="fk-cal-day fk-cal-has" role="gridcell">
-          <span class="fk-cal-num">{{ $n }}</span>
-          {{- range $here }}
-          {{- $p := . }}
-          {{- $names := delimit ($p.Params.teams | default slice) ", " }}
-          <a class="fk-cal-link" href="{{ $p.RelPermalink }}" aria-label="{{ $month.Month | int }}월 {{ $n }}일 {{ $names }}: {{ $p.Title }}">
-            {{- range $p.Params.teams }}
-            <span class="fk-dot fk-{{ index $colourOf . | default "blue" }}" aria-hidden="true"></span>
-            {{- end }}
-            <span class="fk-cal-team" aria-hidden="true">{{ $names }}</span>
-          </a>
-          {{- end }}
-        </span>
-        {{- else }}
-        <span class="fk-cal-day" role="gridcell"><span class="fk-cal-num">{{ $n }}</span></span>
-        {{- end }}
-        {{- end }}
-        {{- end }}
-      </div>
-      {{- end }}
-    </div>
-
-    {{- /* 이 달의 수업 목록 (좁은 화면에서는 달력보다 읽기 쉽다) */}}
-    <ul class="fk-cal-list">
-      {{- range $inMonth }}
-      {{- $p := . }}
-      <li>
-        <a href="{{ $p.RelPermalink }}">
-          <span class="fk-cal-list-date">{{ $p.Date.Format "1월 2일" }}</span>
-          {{- range $p.Params.teams }}
-          <span class="fk-cal-list-team"><span class="fk-dot fk-{{ index $colourOf . | default "blue" }}" aria-hidden="true"></span>{{ . }}</span>
-          {{- end }}
-          <span class="fk-cal-list-title">{{ $p.Title }}</span>
-        </a>
-      </li>
-      {{- end }}
-    </ul>
-  </section>
-  {{- end }}
-  {{- end }}
+  <script type="application/json" id="fk-cal-data">{{ $data }}</script>
+  {{- $js := resources.Get "js/calendar.js" | minify | fingerprint }}
+  <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
 </article>
 {{- end }}
