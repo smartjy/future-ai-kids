@@ -3,10 +3,14 @@
 
 .fk-cal-page {
     --fk-holiday: #d93a2b;
+    --fk-event: #6b4fd8;
+    --fk-event-soft: #efebfd;
 }
 
 :root[data-theme="dark"] .fk-cal-page {
     --fk-holiday: #f07a6c;
+    --fk-event: #b4a3ff;
+    --fk-event-soft: #2c2645;
 }
 
 .fk-cal-lead {
@@ -470,5 +474,95 @@
 @media (max-width: 380px) {
     .fk-cal-year {
         grid-template-columns: 1fr;
+    }
+}
+
+/* ── 앞으로의 일정 (data/events.yaml) ── */
+.fk-cal-ev-mark {
+    margin-right: 6px;
+    font-size: 0.625rem;
+    color: var(--fk-event);
+    vertical-align: 0.15em;
+}
+
+.fk-cal-ev {
+    display: block;
+    margin-top: 4px;
+    padding: 2px 6px;
+    border-left: 3px solid var(--fk-event);
+    border-radius: 4px;
+    background: var(--fk-event-soft);
+    color: var(--fk-ink);
+    font-size: 0.75rem;
+    line-height: 1.35;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+a.fk-cal-ev:hover {
+    text-decoration: underline;
+}
+
+a.fk-cal-ev:focus-visible,
+a.fk-cal-evrow:focus-visible {
+    outline: 2px solid var(--fk-link);
+    outline-offset: 2px;
+}
+
+/* 예상 일정: 점선 테두리와 흐린 글자 */
+.fk-cal-ev.fk-cal-ev-tent {
+    border-left-style: dashed;
+    background: transparent;
+    color: var(--fk-muted);
+}
+
+.fk-cal-mday.fk-cal-hasev .fk-cal-num {
+    box-shadow: inset 0 -2px 0 var(--fk-event);
+}
+
+.fk-cal-mini-evcount {
+    color: var(--fk-event);
+}
+
+.fk-cal-evhead {
+    margin: 20px 0 4px;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.fk-cal-evrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    padding: 2px 0;
+    color: var(--fk-ink);
+    text-decoration: none;
+}
+
+.fk-cal-evrow.fk-cal-ev-tent .fk-cal-list-title {
+    color: var(--fk-muted);
+}
+
+a.fk-cal-evrow:hover .fk-cal-list-title {
+    text-decoration: underline;
+}
+
+/* 좁은 화면 월 보기: 수업처럼 칸에는 표시만, 이름은 아래 「일정」 목록에서 */
+@media (max-width: 560px) {
+    .fk-cal-monthgrid .fk-cal-ev {
+        width: 16px;
+        height: 6px;
+        margin: 4px auto 0;
+        padding: 0;
+        border: 0;
+        border-radius: 3px;
+        background: var(--fk-event);
+        font-size: 0;
+        line-height: 0;
+    }
+
+    .fk-cal-monthgrid .fk-cal-ev.fk-cal-ev-tent {
+        border: 1px dashed var(--fk-event);
+        background: transparent;
     }
 }

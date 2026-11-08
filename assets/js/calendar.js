@@ -1,4 +1,4 @@
-// 수업 달력 (/calendar/): 주·월·년 보기, 이전·다음, 공휴일 표시
+// 수업 달력 (/calendar/): 주·월·년 보기, 이전·다음, 공휴일·앞으로의 일정 표시
 // 데이터는 layouts/calendar.html이 #fk-cal-data에 넣는다. 글 제목 등은 모두 textContent로만 넣는다.
 (function () {
   'use strict';
@@ -14,6 +14,10 @@
   posts.forEach(function (p) { (byDay[p.d] = byDay[p.d] || []).push(p); });
   var holiday = {};
   (data.holidays || []).forEach(function (h) { holiday[h.d] = h.n; });
+  // 앞으로의 일정: 8일 넘게 이어지면 첫날·마지막 날에만 「시작」·「마감」으로, 아니면 날마다
+  var events = data.events || [];
+  var evByDay = {};
+  function addEv(k, ev, label) { (evByDay[k] = evByDay[k] || []).push({ ev: ev, label: label }); }
 
   var WD = ['일', '월', '화', '수', '목', '금', '토'];
   var UNIT = { week: '주', month: '달', year: '해' };
@@ -30,6 +34,17 @@
       cur = parse(saved.d);
     }
   } catch (e) { /* 저장소를 못 쓰면 이번 달부터 */ }
+
+  events.forEach(function (ev) {
+    var s = parse(ev.d), e = ev.e ? parse(ev.e) : s;
+    var span = Math.round((e - s) / 86400000) + 1;
+    if (span > 7) {
+      addEv(ev.d, ev, ev.n + ' 시작');
+      addEv(ev.e, ev, ev.n + ' 마감');
+    } else {
+      for (var d = s; d <= e; d = addDays(d, 1)) addEv(key(d), ev, ev.n);
+    }
+  });
 
   var titleEl = root.querySelector('.fk-cal-title');
   var body = root.querySelector('.fk-cal-body');
@@ -53,14 +68,30 @@
   }
   function names(p) { return p.t.map(function (t) { return t.n; }).join(', '); }
   function md(d) { return (d.getMonth() + 1) + '월 ' + d.getDate() + '일'; }
+  function evText(ev, label) { return label + (ev.x ? ' (예상)' : ''); }
+
+  // 일정 하나: 공고 주소가 있으면 새 탭 링크, 없으면 글자만
+  function evChip(item) {
+    var ev = item.ev;
+    var c = el(ev.u ? 'a' : 'span', 'fk-cal-ev' + (ev.x ? ' fk-cal-ev-tent' : ''), evText(ev, item.label));
+    c.title = evText(ev, item.label);
+    if (ev.u) {
+      c.href = ev.u;
+      c.target = '_blank';
+      c.rel = 'noopener';
+    }
+    return c;
+  }
 
   // ── 날짜 칸 ──
   function dayCell(d, opts) {
     var k = key(d);
     var list = byDay[k] || [];
+    var evs = evByDay[k] || [];
     var hol = holiday[k];
     var cls = 'fk-cal-day';
     if (list.length) cls += ' fk-cal-has';
+    if (evs.length) cls += ' fk-cal-hasev';
     if (hol || d.getDay() === 0) cls += ' fk-cal-red';
     if (same(d, today)) cls += ' fk-cal-today';
     if (opts.dim) cls += ' fk-cal-dim';
@@ -86,6 +117,7 @@
       if (opts.titles) a.appendChild(el('span', 'fk-cal-ptitle', p.title));
       c.appendChild(a);
     });
+    evs.forEach(function (item) { c.appendChild(evChip(item)); });
     return c;
   }
 
@@ -130,6 +162,37 @@
     return ul;
   }
 
+  // ── 아래 목록 (기간에 걸친 일정) ──
+  function eventList(from, to) {
+    var a = key(from), b = key(to);
+    var items = events.filter(function (ev) { return ev.d <= b && (ev.e || ev.d) >= a; });
+    if (!items.length) return null;
+    var wrap = el('div', 'fk-cal-evwrap');
+    wrap.appendChild(el('h3', 'fk-cal-evhead', '일정'));
+    var ul = el('ul', 'fk-cal-list fk-cal-evlist');
+    items.forEach(function (ev) {
+      var li = el('li');
+      var row = el(ev.u ? 'a' : 'span', 'fk-cal-evrow' + (ev.x ? ' fk-cal-ev-tent' : ''));
+      if (ev.u) {
+        row.href = ev.u;
+        row.target = '_blank';
+        row.rel = 'noopener';
+      }
+      var when = md(parse(ev.d)) + (ev.e ? ' – ' + md(parse(ev.e)) : '');
+      row.appendChild(el('span', 'fk-cal-list-date', when));
+      row.appendChild(el('span', 'fk-cal-list-title', evText(ev, ev.n)));
+      li.appendChild(row);
+      ul.appendChild(li);
+    });
+    wrap.appendChild(ul);
+    return wrap;
+  }
+  function lists(from, to) {
+    body.appendChild(postList(from, to));
+    var ev = eventList(from, to);
+    if (ev) body.appendChild(ev);
+  }
+
   // ── 보기 ──
   function renderMonth() {
     var y = cur.getFullYear(), m = cur.getMonth();
@@ -156,7 +219,7 @@
       g.appendChild(row);
     }
     body.appendChild(g);
-    body.appendChild(postList(first, last));
+    lists(first, last);
   }
 
   function renderWeek() {
@@ -172,7 +235,7 @@
     for (var i = 0; i < 7; i++) row.appendChild(dayCell(addDays(start, i), { weekday: true, titles: true }));
     g.appendChild(row);
     body.appendChild(g);
-    body.appendChild(postList(start, end));
+    lists(start, end);
   }
 
   function renderYear() {
@@ -186,8 +249,10 @@
       var btn = el('button', 'fk-cal-mini-title');
       btn.type = 'button';
       btn.appendChild(el('span', null, (m + 1) + '월'));
+      var evCount = events.filter(function (ev) { return ev.d <= key(last) && (ev.e || ev.d) >= key(first); }).length;
       if (count) btn.appendChild(el('span', 'fk-cal-mini-count', '수업 ' + count));
-      btn.setAttribute('aria-label', (m + 1) + '월 달력 보기' + (count ? ', 수업 ' + count + '번' : ''));
+      if (evCount) btn.appendChild(el('span', 'fk-cal-mini-count fk-cal-mini-evcount', '일정 ' + evCount));
+      btn.setAttribute('aria-label', (m + 1) + '월 달력 보기' + (count ? ', 수업 ' + count + '번' : '') + (evCount ? ', 일정 ' + evCount + '개' : ''));
       btn.dataset.month = String(m);
       sec.appendChild(btn);
       var g = grid('fk-cal-minigrid');
@@ -208,9 +273,11 @@
             continue;
           }
           var list = byDay[k] || [];
+          var evs = evByDay[k] || [];
           var cls = 'fk-cal-mday';
           if (holiday[k] || d.getDay() === 0) cls += ' fk-cal-red';
           if (list.length) cls += ' fk-cal-has';
+          if (evs.length) cls += ' fk-cal-hasev';
           if (same(d, today)) cls += ' fk-cal-today';
           var cell = el('span', cls);
           cell.setAttribute('role', 'gridcell');
@@ -225,6 +292,7 @@
             });
             cell.appendChild(ds);
           }
+          evs.forEach(function (item) { label.push(evText(item.ev, item.label)); });
           if (label.length) {
             cell.title = label.join(', ');
             cell.setAttribute('aria-label', md(d) + ' ' + label.join(', '));
