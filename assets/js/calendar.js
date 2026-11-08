@@ -16,6 +16,8 @@
   (data.holidays || []).forEach(function (h) { holiday[h.d] = h.n; });
   // 앞으로의 일정: 8일 넘게 이어지면 첫날·마지막 날에만 「시작」·「마감」으로, 아니면 날마다
   var events = data.events || [];
+  // 공고 링크는 https 주소만 쓴다 (javascript: 같은 주소가 들어와도 링크로 만들지 않는다)
+  events.forEach(function (ev) { if (ev.u && !/^https:\/\//i.test(ev.u)) delete ev.u; });
   var evByDay = {};
   function addEv(k, ev, label) { (evByDay[k] = evByDay[k] || []).push({ ev: ev, label: label }); }
 
