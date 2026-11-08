@@ -1,17 +1,39 @@
-# 달력 페이지(/calendar/)에 보여 줄 앞으로의 일정 (AI 캠프·교육 접수, 캠프 날짜)
+# 달력 페이지(/calendar/)에 보여 줄 AI 캠프·교육 일정 (접수, 캠프·대회 날짜)
 # - start: 시작일, end: 끝나는 날(하루짜리면 뺀다), name: 달력에 보일 이름
 # - tentative: true면 공고 전 예상 날짜다. 달력에 「(예상)」으로 흐리게 나온다. 공고가 나오면 날짜를 고치고 이 줄을 지운다.
 # - url: 누르면 갈 공식 공고 주소. 공식 주소를 모르면 뺀다.
 # - 8일 넘게 이어지는 일정(접수 기간 등)은 시작일과 마지막 날에만 「시작」·「마감」으로 나온다.
 # - 학교명, 동네 이름(구 이름 포함), 학생 이름은 쓰지 않는다. 동네 프로그램은 「구청 AI 캠프」처럼 쓴다.
-# - 예상 날짜는 2026년 일정을 기준으로 잡았다.
+# - 2026년은 공고·기사로 확인한 날짜, 2027년 예상은 2026년 날짜를 같은 요일 근처로 옮겨 잡았다.
 
+# ── 2026년 ──
+- { start: 2026-02-05, end: 2026-02-07, name: LG AI 청소년 캠프 3기 서울대 캠프, url: "https://lgaiyouthcamp.or.kr/information/notices" }
+- { start: 2026-05-06, end: 2026-06-07, name: AI 주니어랩 6기 접수 }
+- { start: 2026-06-16, end: 2026-06-26, name: 디지털새싹 여름 캠프 접수 }
+- { start: 2026-07-03, end: 2026-07-10, name: 구청 AI 캠프 신청(추첨) }
+- { start: 2026-07-04, end: 2026-07-25, name: 디지털새싹 여름 캠프(토요일 4회) }
+- { start: 2026-07-10, end: 2026-07-20, name: 구청 바이브코딩 대회 신청(추첨) }
+- { start: 2026-07-29, end: 2026-08-01, name: AI 주니어랩 6기 캠프 }
+- { start: 2026-07-30, name: 구청 AI 캠프 }
+- { start: 2026-08-05, end: 2026-08-08, name: 구청 바이브코딩 대회 }
+- { start: 2026-08-28, name: LG AI 청소년 캠프 4기 모집 공지, url: "https://lgaiyouthcamp.or.kr/information/notices" }
+- { start: 2026-09-14, end: 2026-10-22, name: LG AI 청소년 캠프 4기 접수, url: "https://lgaiyouthcamp.or.kr/information/notices" }
+- { start: 2026-10-12, end: 2026-11-22, name: AI 주니어랩 7기 접수(중학생) }
+- { start: 2026-12-05, name: LG AI 청소년 캠프 4기 면접, url: "https://lgaiyouthcamp.or.kr/information/notices" }
+
+# ── 2027년 (확정) ──
+- { start: 2027-01-27, end: 2027-01-30, name: AI 주니어랩 7기 캠프 }
+- { start: 2027-02-11, end: 2027-02-13, name: LG AI 청소년 캠프 4기 서울대 캠프, url: "https://lgaiyouthcamp.or.kr/information/notices" }
+
+# ── 2027년 (예상) ──
 - { start: 2027-05-06, end: 2027-06-07, name: AI 주니어랩 8기 접수, tentative: true }
 - { start: 2027-06-15, end: 2027-06-25, name: 디지털새싹 여름 캠프 접수, tentative: true }
 - { start: 2027-07-02, end: 2027-07-09, name: 구청 AI 캠프 신청(추첨), tentative: true }
+- { start: 2027-07-03, end: 2027-07-24, name: 디지털새싹 여름 캠프(토요일 4회), tentative: true }
 - { start: 2027-07-09, end: 2027-07-19, name: 구청 바이브코딩 대회 신청(추첨), tentative: true }
 - { start: 2027-07-28, end: 2027-07-31, name: AI 주니어랩 8기 캠프, tentative: true }
 - { start: 2027-07-29, name: 구청 AI 캠프, tentative: true }
 - { start: 2027-08-04, end: 2027-08-07, name: 구청 바이브코딩 대회, tentative: true }
+- { start: 2027-08-27, name: LG AI 청소년 캠프 5기 모집 공지, tentative: true, url: "https://lgaiyouthcamp.or.kr/information/notices" }
 - { start: 2027-09-13, end: 2027-10-21, name: LG AI 청소년 캠프 5기 접수, tentative: true, url: "https://lgaiyouthcamp.or.kr/information/notices" }
 - { start: 2027-12-04, name: LG AI 청소년 캠프 5기 면접, tentative: true, url: "https://lgaiyouthcamp.or.kr/information/notices" }
