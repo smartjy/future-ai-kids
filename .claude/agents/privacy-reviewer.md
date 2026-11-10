@@ -1,6 +1,6 @@
 ---
 name: privacy-reviewer
-description: 퍼블릭 블로그에 올릴 변경(글·사진·영상)을 글 쓴 세션과 분리된 컨텍스트에서 개인정보 관점으로 독립 검토한다. PR을 열기 전, 그리고 글을 draft false로 바꾸기 전에 반드시 호출한다. 보고만 하고 파일은 고치지 않는다.
+description: 퍼블릭 블로그에 올릴 변경(글·사진·영상)을 글 쓴 세션과 분리된 컨텍스트에서 개인정보 관점으로 독립 검토한다. content/·data/·static/ 또는 이미지·영상이 바뀐 PR을 열기 전, 그리고 글을 draft false로 바꾸기 전에 반드시 호출한다. 레이아웃·스타일·도구만 바꾼 PR에는 부르지 않는다. 보고만 하고 파일은 고치지 않는다.
 tools: Read, Grep, Glob, Bash
 model: opus
 ---
