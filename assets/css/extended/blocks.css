@@ -209,6 +209,10 @@ body {
     color: var(--fk-muted);
 }
 
+.fk-chart-sub .fk-narrow {
+    display: none;
+}
+
 .fk-chart-scroll {
     --fk-col: minmax(8.5rem, 1fr);
     overflow-x: auto;
@@ -323,29 +327,82 @@ body {
     text-underline-offset: 3px;
 }
 
-/* 좁은 화면: 팀 이름을 막대 위로 올려 막대가 넓게 쓰이게 */
+/* 좁은 화면: 옆으로 밀지 않아도 모든 주차가 보이게,
+   팀마다 주차를 위에서 아래로 쌓는다. 칸 앞의 색 띠가 막대 색을 이어 받는다 */
 @media (max-width: 560px) {
+    .fk-chart-sub .fk-wide {
+        display: none;
+    }
+
+    .fk-chart-sub .fk-narrow {
+        display: inline;
+    }
+
     .fk-chart-scroll {
-        --fk-col: minmax(8rem, 1fr);
+        overflow-x: visible;
     }
 
-    .fk-chart-axis,
+    .fk-chart-axis {
+        display: none;
+    }
+
     .fk-chart-row {
-        grid-template-columns: repeat(var(--fk-weeks), var(--fk-col));
-    }
-
-    .fk-chart-axis span:first-child {
-        grid-column: 1;
+        display: block;
+        padding: 14px 0;
     }
 
     .fk-chart-name {
-        grid-column: 1 / -1;
         margin-bottom: 10px;
+        padding-right: 0;
+        white-space: normal;
     }
 
     .fk-chart-count {
         display: inline;
         margin-left: 6px;
+    }
+
+    .fk-chart-bar {
+        display: grid;
+        gap: 10px;
+        margin: 0;
+        padding: 0;
+        counter-reset: fk-week;
+    }
+
+    .fk-chart-bar li {
+        counter-increment: fk-week;
+    }
+
+    .fk-chart-bar a {
+        grid-template-columns: 4.25rem minmax(0, 1fr);
+        column-gap: 12px;
+        row-gap: 0;
+        align-items: baseline;
+    }
+
+    .fk-seg,
+    .fk-chart-bar li:last-child .fk-seg {
+        grid-row: 1 / span 2;
+        align-self: stretch;
+        height: auto;
+        margin: 0;
+        padding-left: 10px;
+        border-left: 6px solid var(--fk-bar);
+        border-radius: 0;
+        background: none;
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        color: var(--fk-muted);
+    }
+
+    .fk-seg::before {
+        content: counter(fk-week) "주차";
+    }
+
+    .fk-seg-made {
+        padding-right: 0;
+        overflow-wrap: anywhere;
     }
 }
 
