@@ -28,7 +28,7 @@
   {{- if gt $weeks 0 }}
   <section class="fk-chart" aria-labelledby="fk-chart-title" style="--fk-weeks: {{ $weeks }}">
     <h2 id="fk-chart-title" class="fk-section-title">팀별 기록</h2>
-    <p class="fk-chart-sub"><span class="fk-wide">막대 한 칸이 수업 한 주예요. 칸을 누르면</span><span class="fk-narrow">한 줄이 수업 한 주예요. 누르면</span> 그 주 기록을 볼 수 있어요.</p>
+    <p class="fk-chart-sub">막대 한 칸이 수업 한 주예요. 칸을 누르면 그 주 기록을 볼 수 있어요.</p>
     <div class="fk-chart-scroll">
       <div class="fk-chart-axis" aria-hidden="true">
         {{- range seq $weeks }}

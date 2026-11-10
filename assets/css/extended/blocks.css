@@ -209,10 +209,6 @@ body {
     color: var(--fk-muted);
 }
 
-.fk-chart-sub .fk-narrow {
-    display: none;
-}
-
 .fk-chart-scroll {
     --fk-col: minmax(8.5rem, 1fr);
     overflow-x: auto;
@@ -327,17 +323,10 @@ body {
     text-underline-offset: 3px;
 }
 
-/* 좁은 화면: 옆으로 밀지 않아도 모든 주차가 보이게,
-   팀마다 주차를 위에서 아래로 쌓는다. 칸 앞의 색 띠가 막대 색을 이어 받는다 */
+/* 좁은 화면: 옆으로 밀지 않고 스크롤도 짧게.
+   막대는 화면 폭에 맞춰 줄이고 칸 안에 주차 번호를 넣는다.
+   칸 아래 글은 가장 최근 주만 한 줄로 보여 준다 (다른 주는 칸을 눌러 본다) */
 @media (max-width: 560px) {
-    .fk-chart-sub .fk-wide {
-        display: none;
-    }
-
-    .fk-chart-sub .fk-narrow {
-        display: inline;
-    }
-
     .fk-chart-scroll {
         overflow-x: visible;
     }
@@ -347,14 +336,16 @@ body {
     }
 
     .fk-chart-row {
-        display: block;
-        padding: 14px 0;
+        position: relative;
+        grid-template-columns: repeat(var(--fk-weeks), minmax(0, 1fr));
+        padding: 14px 0 38px;
+        counter-reset: fk-week;
     }
 
     .fk-chart-name {
-        margin-bottom: 10px;
+        grid-column: 1 / -1;
+        margin-bottom: 8px;
         padding-right: 0;
-        white-space: normal;
     }
 
     .fk-chart-count {
@@ -362,47 +353,56 @@ body {
         margin-left: 6px;
     }
 
-    .fk-chart-bar {
-        display: grid;
-        gap: 10px;
-        margin: 0;
-        padding: 0;
-        counter-reset: fk-week;
-    }
-
     .fk-chart-bar li {
         counter-increment: fk-week;
     }
 
-    .fk-chart-bar a {
-        grid-template-columns: 4.25rem minmax(0, 1fr);
-        column-gap: 12px;
-        row-gap: 0;
-        align-items: baseline;
-    }
-
-    .fk-seg,
-    .fk-chart-bar li:last-child .fk-seg {
-        grid-row: 1 / span 2;
-        align-self: stretch;
-        height: auto;
-        margin: 0;
-        padding-left: 10px;
-        border-left: 6px solid var(--fk-bar);
-        border-radius: 0;
-        background: none;
+    /* 칸 안 번호는 테마와 상관없이 진한 글자: 네 팀 색 모두 대비 4.5:1 이상 */
+    .fk-seg {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 28px;
+        margin-bottom: 0;
         font-size: 0.8125rem;
-        line-height: 1.4;
-        color: var(--fk-muted);
+        font-weight: 700;
+        color: #17181a;
     }
 
     .fk-seg::before {
-        content: counter(fk-week) "주차";
+        content: counter(fk-week);
     }
 
-    .fk-seg-made {
+    .fk-seg-made,
+    .fk-seg-date {
+        display: none;
+    }
+
+    .fk-chart-bar li:last-child .fk-seg-made,
+    .fk-chart-bar li:last-child .fk-seg-date {
+        display: block;
+        position: absolute;
+        bottom: 12px;
+        line-height: 1.4;
+    }
+
+    .fk-chart-bar li:last-child .fk-seg-made {
+        left: 0;
+        right: 5rem;
         padding-right: 0;
-        overflow-wrap: anywhere;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .fk-chart-bar li:last-child .fk-seg-made::before {
+        content: "최근 · ";
+        font-weight: 400;
+        color: var(--fk-muted);
+    }
+
+    .fk-chart-bar li:last-child .fk-seg-date {
+        right: 0;
     }
 }
 
