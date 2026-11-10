@@ -209,34 +209,14 @@ body {
     color: var(--fk-muted);
 }
 
+/* 팀마다 최근 4주까지만 보여 주므로 칸 수가 4를 넘지 않아 옆으로 밀 일이 없다 */
 .fk-chart-scroll {
-    --fk-col: minmax(8.5rem, 1fr);
-    overflow-x: auto;
-    padding-bottom: 4px;
+    border-top: 1px solid var(--fk-line);
 }
 
-.fk-chart-axis,
 .fk-chart-row {
     display: grid;
-    grid-template-columns: 6.5rem 1fr;
-    column-gap: 16px;
-}
-
-.fk-chart-axis {
-    grid-template-columns: 6.5rem repeat(var(--fk-weeks), var(--fk-col));
-    column-gap: 2px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--fk-line);
-    font-size: 0.8125rem;
-    color: var(--fk-muted);
-}
-
-.fk-chart-axis span:first-child {
-    grid-column: 2;
-}
-
-.fk-chart-row {
-    grid-template-columns: 6.5rem repeat(var(--fk-weeks), var(--fk-col));
+    grid-template-columns: 6.5rem repeat(var(--fk-weeks), minmax(0, 1fr));
     column-gap: 2px;
     align-items: start;
     padding: 16px 0;
@@ -290,11 +270,24 @@ body {
     color: var(--fk-ink);
 }
 
+/* 칸 안 주차는 테마와 상관없이 진한 글자: 네 팀 색 모두 대비 4.5:1 이상 */
 .fk-seg {
-    display: block;
+    display: flex;
+    align-items: center;
     height: 24px;
     margin-bottom: 8px;
+    padding-left: 8px;
     background: var(--fk-bar);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #17181a;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* 칸 안 날짜는 좁은 화면에서만 (넓은 화면은 칸 아래에 날짜가 있다) */
+.fk-seg-day {
+    display: none;
 }
 
 .fk-chart-bar li:last-child .fk-seg {
@@ -323,23 +316,14 @@ body {
     text-underline-offset: 3px;
 }
 
-/* 좁은 화면: 옆으로 밀지 않고 스크롤도 짧게.
-   막대는 화면 폭에 맞춰 줄이고 칸 안에 주차 번호를 넣는다.
-   칸 아래 글은 가장 최근 주만 한 줄로 보여 준다 (다른 주는 칸을 눌러 본다) */
+/* 좁은 화면: 스크롤을 짧게.
+   막대는 화면 폭에 맞춰 줄이고 칸 안에 주차와 날짜를 둔다.
+   칸 아래에는 가장 최근 주에 만든 것만 한 줄로 보여 준다 (다른 주는 칸을 눌러 본다) */
 @media (max-width: 560px) {
-    .fk-chart-scroll {
-        overflow-x: visible;
-    }
-
-    .fk-chart-axis {
-        display: none;
-    }
-
     .fk-chart-row {
         position: relative;
         grid-template-columns: repeat(var(--fk-weeks), minmax(0, 1fr));
         padding: 14px 0 38px;
-        counter-reset: fk-week;
     }
 
     .fk-chart-name {
@@ -353,24 +337,20 @@ body {
         margin-left: 6px;
     }
 
-    .fk-chart-bar li {
-        counter-increment: fk-week;
-    }
-
-    /* 칸 안 번호는 테마와 상관없이 진한 글자: 네 팀 색 모두 대비 4.5:1 이상 */
+    /* 칸마다 「N주차」와 날짜를 두 줄로: 숫자만 있으면 뭔지 알기 어렵다 */
     .fk-seg {
-        display: flex;
-        align-items: center;
+        flex-direction: column;
         justify-content: center;
-        height: 28px;
+        height: 40px;
         margin-bottom: 0;
-        font-size: 0.8125rem;
-        font-weight: 700;
-        color: #17181a;
+        padding-left: 0;
+        line-height: 1.25;
     }
 
-    .fk-seg::before {
-        content: counter(fk-week);
+    .fk-seg-day {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 500;
     }
 
     .fk-seg-made,
@@ -378,17 +358,13 @@ body {
         display: none;
     }
 
-    .fk-chart-bar li:last-child .fk-seg-made,
-    .fk-chart-bar li:last-child .fk-seg-date {
+    .fk-chart-bar li:last-child .fk-seg-made {
         display: block;
         position: absolute;
         bottom: 12px;
         line-height: 1.4;
-    }
-
-    .fk-chart-bar li:last-child .fk-seg-made {
         left: 0;
-        right: 5rem;
+        right: 0;
         padding-right: 0;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -396,13 +372,9 @@ body {
     }
 
     .fk-chart-bar li:last-child .fk-seg-made::before {
-        content: "최근 · ";
+        content: "최근 " attr(data-week) " · ";
         font-weight: 400;
         color: var(--fk-muted);
-    }
-
-    .fk-chart-bar li:last-child .fk-seg-date {
-        right: 0;
     }
 }
 

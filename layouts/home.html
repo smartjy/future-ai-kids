@@ -3,12 +3,15 @@
 {{- $teams := where hugo.Data.teams "active" true }}
 {{- $colours := slice "blue" "yellow" "green" "red" }}
 
-{{- /* 막대 칸 수: 가장 많이 수업한 팀의 주차 수 */}}
+{{- /* 막대 칸 수: 팀마다 최근 $recent주까지만 보여 준다.
+     칸 수는 가장 많이 수업한 팀의 주차 수, 최대 $recent */}}
+{{- $recent := 4 }}
 {{- $weeks := 0 }}
 {{- range $teams }}
 {{- $n := len (where $posts "Params.teams" "intersect" (slice .name)) }}
 {{- if gt $n $weeks }}{{ $weeks = $n }}{{ end }}
 {{- end }}
+{{- if gt $weeks $recent }}{{ $weeks = $recent }}{{ end }}
 
 <div class="fk-home">
 
@@ -28,15 +31,13 @@
   {{- if gt $weeks 0 }}
   <section class="fk-chart" aria-labelledby="fk-chart-title" style="--fk-weeks: {{ $weeks }}">
     <h2 id="fk-chart-title" class="fk-section-title">팀별 기록</h2>
-    <p class="fk-chart-sub">막대 한 칸이 수업 한 주예요. 칸을 누르면 그 주 기록을 볼 수 있어요.</p>
+    <p class="fk-chart-sub">막대 한 칸이 수업 한 주예요. 팀마다 최근 {{ $recent }}주까지 보여요. 칸을 누르면 그 주 기록을 볼 수 있어요.</p>
     <div class="fk-chart-scroll">
-      <div class="fk-chart-axis" aria-hidden="true">
-        {{- range seq $weeks }}
-        <span>{{ . }}주차</span>
-        {{- end }}
-      </div>
       {{- range $i, $t := $teams }}
       {{- $mine := (where $posts "Params.teams" "intersect" (slice $t.name)).ByDate }}
+      {{- /* 최근 $recent주만. 주차 번호는 그 팀의 전체 순서를 그대로 쓴다 */}}
+      {{- $skip := 0 }}
+      {{- if gt (len $mine) $recent }}{{ $skip = sub (len $mine) $recent }}{{ end }}
       <div class="fk-chart-row fk-team-{{ index $colours (mod $i 4) }}">
         <p class="fk-chart-name">
           <span class="fk-dot fk-{{ index $colours (mod $i 4) }}" aria-hidden="true"></span>
@@ -49,12 +50,13 @@
           <span class="fk-chart-count">{{ len $mine }}주</span>
         </p>
         <ol class="fk-chart-bar">
-          {{- range $k, $p := $mine }}
+          {{- range $k, $p := after $skip $mine }}
+          {{- $week := add $skip $k 1 }}
           {{- $made := (index ($p.Params.made | default dict) $t.name) | default "참여했어요" }}
           <li>
-            <a href="{{ $p.RelPermalink }}" aria-label="{{ $t.name }} {{ add $k 1 }}주차, {{ $p.Date.Format "1월 2일" }}: {{ $made }}">
-              <span class="fk-seg" aria-hidden="true"></span>
-              <span class="fk-seg-made">{{ $made }}</span>
+            <a href="{{ $p.RelPermalink }}" aria-label="{{ $t.name }} {{ $week }}주차, {{ $p.Date.Format "1월 2일" }}: {{ $made }}">
+              <span class="fk-seg" aria-hidden="true"><span class="fk-seg-week">{{ $week }}주차</span><span class="fk-seg-day">{{ $p.Date.Format "1/2" }}</span></span>
+              <span class="fk-seg-made" data-week="{{ $week }}주차">{{ $made }}</span>
               <span class="fk-seg-date">{{ $p.Date.Format "1월 2일" }}</span>
             </a>
           </li>
