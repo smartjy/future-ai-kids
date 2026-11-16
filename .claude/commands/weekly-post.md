@@ -6,7 +6,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), 
 
 # /weekly-post — 주간 수업 기록 글쓰기
 
-수업 메모를 바탕으로 한 주 기록 글(`draft: true`)과 네이버 요약본을 쓰고, 개인정보 검토를 거쳐 PR을 연다.
+수업 메모를 바탕으로 한 주 기록 글을 쓰고, 검토와 사람의 미리 보기 확인을 거쳐 `draft: false`로 PR을 한 번 연다. 머지하면 바로 발행된다.
 이 레포는 퍼블릭이다. 글, 커밋 메시지, PR 본문, 브랜치 이름 어디에도 학생 실명, 학교명, 반, 동네 이름을 쓰지 않는다.
 시작하기 전에 `CLAUDE.md`를 읽고 그 규칙을 따른다.
 
@@ -51,7 +51,7 @@ git switch -c post/<팀 별칭 소문자>-week-NN   # 예: post/wanted-week-02
 hugo new content posts/YYYY-MM-DD-week-NN
 ```
 
-- `content/posts/YYYY-MM-DD-week-NN/index.md`가 `draft: true`로 생긴다. 번들 아키타입이면 같은 폴더에 `naver.md`도 함께 생긴다.
+- `content/posts/YYYY-MM-DD-week-NN/index.md`가 `draft: true`로 생긴다. 미리 보기를 확인받을 때까지 `true`로 두고, 확인받으면 11단계에서 `false`로 바꾼다. 번들 아키타입이면 같은 폴더에 `naver.md`도 함께 생긴다.
 - front matter `date`는 수업 날짜(`YYYY-MM-DDT10:00:00+09:00` 꼴)로 고친다.
 
 ## 4. 본문 쓰기 (`draft: true`) — `post-writer`
@@ -144,7 +144,7 @@ hugo new content posts/YYYY-MM-DD-week-NN
 
 그다음 `content-reviewer` 서브 에이전트를 불러 커밋 전 글 내용을 검토받는다. 구조, front matter, 팀 별칭·호칭, 메모와의 사실 일치, 톤, 미디어 참조, `naver.md` 형식, 빌드를 본다.
 
-- 넘길 것: 글 폴더 경로, 메모 위치, 단계(`초안` 또는 `발행`)
+- 넘길 것: 글 폴더 경로, 메모 위치
 - 결과가 **수정 필요**면 필수 수정을 고친다. 권장 수정은 사람에게 보여 주고 정한다. 고친 뒤 7단계 검사를 돌리고 다시 검토를 맡긴다.
 - 문장을 많이 고쳤으면 5단계 윤문을 다시 거친다.
 
@@ -156,17 +156,29 @@ hugo new content posts/YYYY-MM-DD-week-NN
 - 실명 목록을 프롬프트로 넘기지 않는다. (에이전트가 `.private/`를 직접 읽는다)
 - 결과가 **차단**이면 보고된 파일·이유대로 고치고, 7단계 검사 후 다시 검토를 맡긴다. **통과**가 나올 때까지 다음 단계로 가지 않는다.
 
-## 11. 커밋하고 PR 열기
+## 11. 사람의 미리 보기 확인
+
+사람에게 미리 보기 주소를 알려 주고 기다린다. (세션이 서버를 띄워도 된다)
+
+```bash
+hugo server --buildDrafts
+# http://localhost:1313/future-ai-kids/posts/YYYY-MM-DD-week-NN/
+```
+
+- 고칠 점이 나오면 고치고, 고친 범위에 맞춰 다시 검토받는다. 문장을 고쳤으면 `fact-checker`, 문장을 많이 고쳤으면 윤문(5단계)과 `content-reviewer`, 사진·영상을 바꿨으면 `privacy-reviewer`를 다시 거친다. 그 뒤 다시 미리 보기를 확인받는다.
+- 사람이 확인하면 front matter를 `draft: false`로 바꾸고 `hugo --gc --minify --printPathWarnings`가 경고 없이 끝나는지 본다. **초안 PR과 발행 PR을 따로 두지 않는다.** PR은 한 번만 열고, 머지하면 바로 발행된다.
+
+## 12. 커밋하고 PR 열기
 
 ```bash
 git add content/posts/YYYY-MM-DD-week-NN
-git status   # notes/, .private/, _workspace/, 원본 영상이 섞이지 않았는지 확인
-git commit -m "<팀 별칭> NN주차 수업 기록 초안"
+git status   # notes/, .private/, _workspace/, 원본 영상, 다른 팀의 커밋하지 않은 글 폴더가 섞이지 않았는지 확인
+git commit -m "<팀 별칭> NN주차 수업 기록"
 ```
 
 - 커밋 메시지는 한국어로, 실명 없이 쓴다.
 - push하기 전에 `/security-audit`를 가이드 모드로 실행해 이 브랜치의 변경(`main` 대비)을 보안 관점에서 검토받는다. 파일은 만들지 않는다. 취약점이 나오면 고치고 커밋한 뒤 다시 실행한다. 결과는 PR 본문 「검증」에 적는다.
-- **push하기 전에 사람에게 확인을 받는다.** 확인을 받으면:
+- 미리 보기를 확인한 사람이 올리라고 했으면 push하고 PR을 연다:
   ```bash
   git push -u origin post/<팀 별칭 소문자>-week-NN
   gh pr create --base main --head post/<팀 별칭 소문자>-week-NN --title "<팀 별칭> NN주차 수업 기록" --body-file <본문>
@@ -194,28 +206,11 @@ git commit -m "<팀 별칭> NN주차 수업 기록 초안"
   ```
 - 개인정보 처리 내역에는 **바꾼 개수와 방식만** 쓰고 실명은 절대 쓰지 않는다.
 
-## 12. 사람의 로컬 확인
+## 13. 머지와 발행 확인
 
-사람에게 다음을 안내하고 기다린다.
-
-```bash
-hugo server --buildDrafts
-```
-
-고칠 점이 나오면 같은 브랜치에서 고치고 7·9·10단계를 다시 거친 뒤 커밋·push한다.
-
-## 13. 최종 발행
-
-사람이 발행하자고 하면:
-
-1. 본문과 `naver.md`에 `/humanize-korean`을 한 번 더 실행하고 `git diff`로 보호 항목을 확인한다.
-2. `./tools/privacy-check.sh`를 다시 통과시킨다.
-3. `fact-checker`, `content-reviewer`(단계 `발행`), `privacy-reviewer`로 다시 검토한다. 수정 필요·차단이면 고치고 다시 검토한다.
-4. front matter를 `draft: false`로 바꾸고 `hugo --gc --minify --printPathWarnings`가 경고 없이 끝나는지 확인한다.
-5. 커밋하고 사람의 확인을 받아 push한다. **push하기 전에 `gh pr view <번호> --json state`로 PR이 아직 열려 있는지 본다.** 이미 머지됐으면 그 브랜치에 push해도 `main`에 반영되지 않는다. `main`에서 새 브랜치를 만들어 발행 커밋을 옮기고(`git cherry-pick`) 새 PR을 연다. push한 뒤에는 `gh pr view <번호> --json commits`로 발행 커밋이 PR에 들어갔는지 확인하고 나서 사람에게 머지를 부탁한다.
-   - 사람이 미리 보기를 보고 PR을 열기 전에 발행을 요청하면, 처음부터 `draft: false`를 넣은 PR 하나로 올린다. (초안 PR과 발행 PR을 따로 두지 않는다)
-   - 머지된 뒤 `gh run list`로 배포가 성공했는지, 글 주소가 열리는지(HTTP 200) 확인해 알린다.
-6. **머지는 리뷰어 승인을 받은 뒤 사람이 한다.** (회사 규칙: 리뷰어 승인을 받은 PR로만 반영) 머지 방식은 「Create a merge commit」. 여러 PR이 사슬로 쌓여 있으면 맨 위부터 아래로 머지하고, 다 끝날 때까지 브랜치를 지우지 않는다. `main`에 직접 push하지 않고, force push하지 않는다.
+1. **머지는 리뷰어 승인을 받은 뒤 사람이 한다.** (회사 규칙: 리뷰어 승인을 받은 PR로만 반영) 머지 방식은 「Create a merge commit」. `main`에 직접 push하지 않고, force push하지 않는다. 머지하면 `draft: false`인 글이 바로 발행된다.
+2. PR을 연 뒤에 고칠 것이 생기면 **push하기 전에 `gh pr view <번호> --json state`로 PR이 아직 열려 있는지 본다.** 이미 머지됐으면 그 브랜치에 push해도 `main`에 반영되지 않는다. `main`에서 새 브랜치를 만들어 고친 커밋을 옮기고(`git cherry-pick`) 새 PR을 연다. push한 뒤에는 `gh pr view <번호> --json commits`로 커밋이 PR에 들어갔는지 확인하고 나서 사람에게 머지를 부탁한다.
+3. 머지된 뒤 `gh run list`로 배포가 성공했는지, 글 주소가 열리는지(HTTP 200) 확인해 알린다.
 
 네이버 업로드는 GitHub 발행 뒤에 사람이 `naver.md`를 보고 직접 한다. 이미지는 네이버 에디터에서 따로 올린다.
 
