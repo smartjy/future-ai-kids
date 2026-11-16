@@ -47,6 +47,7 @@ cd _workspace/rec && node <team-id>-rec.js
 ./tools/clip.sh notes/YYYY-MM-DD/media/<team-id>-game.webm <시작 mm:ss> <길이(초)> content/posts/YYYY-MM-DD-week-NN <영문-이름> [--crop W:H:X:Y]
 ```
 
+- **클립 길이는 15~25초.** 시작 → 플레이 → 클리어나 결과 화면 같은 핵심 흐름이 그 안에 다 들어가지 않을 때만 **30초까지** 늘린다. 30초를 넘기지 않는다. (원본 녹화는 템플릿 기본값 최대 45초)
 - 화면 녹화는 `--crop`으로 게임 영역만 남긴다. 페이지 제목·설명 글, 브라우저 UI가 남지 않게 한다.
 - 4초보다 긴 장면은 mp4만 생긴다. (gif는 4초 이하일 때만)
 - 대표 이미지는 장면이 잘 보이는 프레임을 따로 jpg로 뽑아 글 폴더에 두고 `./tools/strip-metadata.sh <글 폴더>`를 돌린다. `clip.sh`가 만든 첫 프레임 jpg는 영상 포스터다.
