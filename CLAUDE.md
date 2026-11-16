@@ -17,7 +17,7 @@
   - GPS가 걸리면 `tools/strip-metadata.sh <글 폴더>`로 메타데이터를 지운다. 영상 크기·오디오는 `tools/clip.sh`로 다시 만든다.
   - hook을 `--no-verify`로 건너뛰지 않는다.
 - 메모에 실명이 있으면 글에는 `.private/roster.yaml`의 가명으로 바꿔 쓰고, 바꾼 사실은 PR 설명에만 남긴다. 실명과 가명의 대응은 PR에도 쓰지 않는다.
-- PR을 열기 전, 그리고 `draft: false`로 바꾸기 전에 `privacy-reviewer` 서브 에이전트를 호출해 독립 검토를 받는다. (얼굴, 이름표, 교복·로고, 화면 속 계정명, 영상 프레임까지 본다) 「차단」이면 고친 뒤 다시 검토받는다.
+- PR을 열기 전에 `privacy-reviewer` 서브 에이전트를 호출해 독립 검토를 받는다. (얼굴, 이름표, 교복·로고, 화면 속 계정명, 영상 프레임까지 본다) 「차단」이면 고친 뒤 다시 검토받는다.
   - 대상은 `content/`, `data/`, `static/` 또는 이미지·영상 파일이 바뀐 PR이다. 레이아웃·스타일·스크립트·도구·문서만 바꾼 PR은 `privacy-reviewer`를 부르지 않는다. 대신 메인 세션이 변경 diff·커밋 메시지·PR 본문을 `.private/names.txt` 금지어와 대조한다. (`tools/privacy-check.sh`는 `.css` 등 일부 파일을 금지어 검사에서 빼므로 diff를 직접 대조한다. 걸린 낱말은 출력하지 않는다) 걸리면 멈추고 사람에게 알린다.
 - 개인정보 커밋을 발견하면 추가 커밋으로 덮지 말고 즉시 멈추고 사람에게 보고한다.
 - 검사 테스트에는 가짜 데이터만 쓴다. 테스트 파일과 테스트용 `.private/`는 커밋하지 않고 지운다.
@@ -43,7 +43,7 @@
   - `real`에도 성+이름 전체를 넣는다. `tools/commit-guard.sh`는 `real` 값도 금지어로 쓰므로, 한 글자 이름만 넣으면 그 글자가 들어간 낱말까지 모두 걸려 커밋이 막힌다. 성을 모르면 사람에게 묻는다.
   - 가명이 흔한 낱말과 같으면(예: 「하늘」) 글에서는 「하늘이」, 「하늘은」처럼 이름인 게 드러나게 쓴다.
   - 팀 페이지(`/teams/`)는 `data/teams.yaml`의 `leader`·`members`를 보여 준다. 새 학생이나 리더가 바뀌면 여기에도 가명으로 고친다. 실명은 넣지 않는다.
-- 새 글은 `hugo new content posts/YYYY-MM-DD-week-NN`(끝에 `/index.md`를 붙이지 않는다)로 만들고 `draft: true`로 시작한다. 글 폴더에 `index.md`와 `naver.md`가 함께 생긴다. `/index.md`까지 쓰면 번들 아키타입이 적용되지 않아 제목이 틀리고 `naver.md`도 생기지 않는다.
+- 새 글은 `hugo new content posts/YYYY-MM-DD-week-NN`(끝에 `/index.md`를 붙이지 않는다)로 만들고 `draft: true`로 시작한다. 사람이 미리 보기로 확인하면 `draft: false`로 바꿔 커밋하고 PR은 한 번만 연다. (초안 PR과 발행 PR을 따로 두지 않는다) 글 폴더에 `index.md`와 `naver.md`가 함께 생긴다. `/index.md`까지 쓰면 번들 아키타입이 적용되지 않아 제목이 틀리고 `naver.md`도 생기지 않는다.
 
 ## 네이버 블로그 요약본
 > **지금은 중단.** 네이버 블로그는 운영하지 않는다. 사람이 다시 운영하자고 하기 전까지 `naver.md`를 쓰거나 고치지 않고, 네이버 관련 단계는 모두 건너뛴다. (`hugo new`가 만드는 빈 `naver.md`는 그대로 둔다)
@@ -60,10 +60,10 @@
 - 흐름: 날짜·참여 팀·메모 확인 → `main`에서 `post/<팀 별칭 소문자>-week-NN` 브랜치(예: `post/wanted-week-02`) → `hugo new content` → 본문 초안(`post-writer`) → `/humanize-korean` → 사진(`tools/strip-metadata.sh`)·영상(`tools/clip.sh`) → `tools/privacy-check.sh` → `naver.md`(`post-writer`) → `fact-checker` → `content-reviewer` → `privacy-reviewer` → `/security-audit` → 사람 확인 후 push·PR
 - 메모는 `notes/YYYY-MM-DD/` 폴더에 `class.md`(공통: 강의 주제, 수업 흐름, 다음 주 예고)와 팀마다 `<team-id>.md`(예: `team1.md`)로 둔다. 쉰 팀은 파일을 만들지 않는다. 미디어 원본은 `notes/YYYY-MM-DD/media/`에 두고 파일 이름 앞에 팀 id(공통이면 `class-`)를 붙인다. 메모 예시는 `notes.example/2026-10-24/`에 있다.
 - 실명과 가명의 대응은 `.private/roster.yaml`에만 둔다. 다른 파일(글, 주석, scratchpad, 커밋 메시지, PR 본문)에는 남기지 않는다.
-- 발행은 사람이 `hugo server --buildDrafts`로 확인한 뒤, 윤문과 `fact-checker`·`content-reviewer`·`privacy-reviewer`를 한 번 더 거쳐 `draft: false`로 바꾸고 사람이 머지한다.
+- 윤문과 `fact-checker`·`content-reviewer`·`privacy-reviewer`를 거친 뒤 사람이 `hugo server --buildDrafts`로 미리 보기를 확인한다. 확인하면 `draft: false`로 바꿔 PR을 열고, 사람이 머지하면 바로 발행된다. 미리 보기 뒤 고친 곳이 있으면 고친 범위만큼 다시 검토받는다.
 
 ## 문체 다듬기 (humanize-korean)
-- 초안 작성 직후, 그리고 `draft: false`로 바꾸기 직전에 `/humanize-korean`을 실행해 AI 티를 없앤다. 네이버 요약본도 같다.
+- 초안 작성 직후에 `/humanize-korean`을 실행해 AI 티를 없앤다. 미리 보기 뒤 문장을 많이 고쳤으면 다시 실행한다. 네이버 요약본도 같다.
 - front matter, shortcode, 이미지 경로, 링크, 팀 별칭, 가명 호칭은 바꾸지 않는다. 문체(해요체)도 바꾸지 않는다. (윤문은 문체를 그대로 두므로 초안부터 해요체로 쓴다) 윤문 뒤 `git diff`로 확인하고 깨졌으면 되돌린다.
 - 스킬이 만드는 `_workspace/`는 커밋하지 않는다.
 
