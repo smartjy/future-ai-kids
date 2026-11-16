@@ -36,7 +36,7 @@ usage() {
 
 결과물 (글 폴더 안):
   <이름>.mp4   가로 720px, H.264, 소리 없음, faststart, 목표 2MB 이하
-  <이름>.gif   가로 480px, 12fps (4초 이하 짧은 장면용)
+  <이름>.gif   가로 480px, 12fps (4초 이하 장면일 때만 만든다)
   <이름>.jpg   첫 프레임 포스터 (메타데이터 제거)
 
 필터 순서: crop → blur → 크기 조절. mp4, gif, jpg 모두 같은 필터를 쓴다.
@@ -320,7 +320,8 @@ if [ "$size" -gt "$MAX_BYTES" ]; then
   warn "$OUT_MP4 이(가) $(human_size "$size")로 2MB를 넘습니다. 길이를 줄이거나 --crop으로 영역을 줄이세요."
 fi
 
-# ── 2. gif (2-pass) ──
+# ── 2. gif (2-pass) — 4초 이하 장면일 때만 ──
+if awk -v d="$DURATION" 'BEGIN { exit !(d <= 4) }'; then
 echo "gif 만드는 중..."
 GIF_SCALE="fps=${GIF_FPS},scale=${GIF_WIDTH}:-2:flags=lanczos"
 "${FF[@]}" "${IN[@]}" \
@@ -333,6 +334,9 @@ mv "$WORK_DIR/out.gif" "$OUT_GIF"
 gif_size="$(file_size "$OUT_GIF")"
 if [ "$gif_size" -gt "$MAX_BYTES" ]; then
   warn "$OUT_GIF 이(가) $(human_size "$gif_size")입니다. gif는 4초 이하 짧은 장면에만 쓰고, 아니면 mp4를 쓰세요."
+fi
+else
+  rm -f "$OUT_GIF"   # 4초보다 길면 gif를 만들지 않는다 (크기 초과로 privacy-check가 실패함)
 fi
 
 # ── 3. jpg 포스터 (첫 프레임) ──
@@ -348,11 +352,12 @@ mv "$WORK_DIR/out.jpg" "$OUT_JPG"
 echo
 echo "완료:"
 for f in "$OUT_MP4" "$OUT_GIF" "$OUT_JPG"; do
+  [ -e "$f" ] || continue
   echo "  $f ($(human_size "$(file_size "$f")"))"
 done
 echo "  (mp4 crf ${crf})"
 if awk -v d="$DURATION" 'BEGIN { exit !(d > 4) }'; then
-  echo "참고: ${DURATION}초는 4초보다 깁니다. 본문에는 mp4를 쓰고, 쓰지 않는 gif는 지우세요."
+  echo "참고: ${DURATION}초는 4초보다 길어 gif는 만들지 않았습니다. 본문에는 mp4를 쓰세요."
 else
   echo "참고: 4초 이하 장면은 gif를 써도 됩니다. 쓰지 않는 파일은 지우세요."
 fi

@@ -12,7 +12,7 @@
 
 ## 개인정보 검사
 - 커밋 전에 반드시 `tools/privacy-check.sh`를 실행한다. (pre-commit hook이 `content/`, `data/`를 자동 검사한다. hook은 `git config core.hooksPath .githooks`로 켠다)
-  - `tools/privacy-check.sh [경로 ...]` — 기본 `content/`, 금지어는 `data/`도 함께 본다. 종료 코드 0 통과, 1 실패
+  - `tools/privacy-check.sh [경로 ...]` — 기본 `content/`, 금지어는 `data/`도 함께 본다. 종료 코드 0 통과, 1 실패. `.private/`가 없는 git worktree에서 돌리면 금지어 검사를 건너뛰므로 메인 작업 폴더에서 돌린다.
   - 검사: 금지어(`.private/names.txt`, 로컬 전용), 사진 GPS, 크기(이미지 2MB, mp4/webm·GIF 3MB), 영상 오디오 트랙
   - GPS가 걸리면 `tools/strip-metadata.sh <글 폴더>`로 메타데이터를 지운다. 영상 크기·오디오는 `tools/clip.sh`로 다시 만든다.
   - hook을 `--no-verify`로 건너뛰지 않는다.
@@ -29,9 +29,10 @@
 - `archetypes/posts/index.md` 구조를 유지한다: 이번 주 주제 → 오늘의 수업 흐름 → 팀별 섹션 → 숙제 → 다음 주 예고
 - 「학생들의 한마디」, 「숙제」, 「다음 주 예고」는 메모에 내용이 있을 때만 넣는다. 비어 있으면 섹션째 뺀다. (지어내지 않는다)
 - 첫 섹션 제목은 「이번 주 주제」라는 문구가 아니라 그 주 주제 자체로 쓴다. (예: `## AI 시대, 나는 어떤 일을 하게 될까?`) 글 제목(`title`)은 「N주차 · <그 주에 만든 것>」으로 두어 섹션 제목과 겹치지 않게 한다.
-- 수업 날짜 하나에 글 하나, 그날 참여한 팀을 모두 한 글에 담는다. 쉰 팀은 섹션과 front matter `teams`에서 뺀다.
+- 수업 날짜 하나에 글 하나, 그날 참여한 팀을 모두 한 글에 담는다. 쉰 팀은 섹션과 front matter `teams`에서 뺀다. 팀별 주차가 달라 사람이 나누기로 하면 팀마다 글·브랜치·PR을 따로 낸다.
 - 주차는 팀별로 센다. `NN`은 `content/posts/*/index.md` 중 front matter `teams`에 그 팀이 들어간 글 수에 1을 더한 두 자리 번호다. (예: Doumy가 두 번 수업했으면 Doumy의 다음 글은 `03`) 한 글에 들어갈 팀들의 주차가 서로 다르면 멈추고 사람에게 묻는다. 제목의 「N주차」와 폴더의 `week-NN`도 이 번호를 쓴다. 날짜가 달라 폴더 이름은 겹치지 않는다.
 - 팀 이름은 `data/teams.yaml`의 별칭(`name`)만 쓴다.
+- 팀이 별칭을 바꾸면 `data/teams.yaml`의 `name`, 지난 글의 front matter `teams`·`made` 키·본문 속 별칭(조사도 맞춘다), `.claude/` 문서의 예시를 함께 고친다. `naver.md`는 네이버 중단 중이라 그대로 둔다.
 - front matter `made`에 참여한 팀마다 그 주에 만든 것을 짧게 쓴다. (예: `Doumy: "게임 DOUMY"`) 홈 화면의 팀 카드와 주차별 기록판에 나온다. 메모에 근거가 있어야 하고, 쉰 팀은 넣지 않는다. 학생 이름(가명 포함)·학교·장소는 넣지 않는다.
 - 글에서는 Claude 같은 AI 제품·서비스 이름을 쓰지 않고 「AI」라고 쓴다. 태그에도 넣지 않는다.
 - 글 초안과 `naver.md`는 `post-writer` 서브 에이전트에 맡긴다. 브랜치·커밋·윤문은 메인 세션이 한다.
