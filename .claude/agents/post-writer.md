@@ -1,6 +1,6 @@
 ---
 name: post-writer
-description: 수업 메모(notes/)를 읽고 그 주 기록 글 초안(index.md, draft true)과 네이버 요약본(naver.md)을 쓴다. 실명은 .private/roster.yaml의 가명(「<가명>」)으로 바꾼다. 브랜치·커밋·push·윤문은 하지 않는다. /weekly-post 4단계와 8단계에서 호출한다.
+description: 수업 메모(notes/)를 읽고 그 주 기록 글 초안(index.md, draft true)과 네이버 요약본(naver.md)을 쓴다. 실명은 .private/roster.yaml의 가명(「<가명>」)으로 바꾼다. 브랜치·커밋·push·윤문은 하지 않는다. /draft-post 3단계(본문)에서 호출한다. 네이버 운영을 다시 하면 요약본도 맡는다.
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: opus
 ---
