@@ -84,7 +84,7 @@ hugo --gc --minify --printPathWarnings --buildDrafts --destination "$(mktemp -d)
 - **사람이 정할 것**: `class.md`가 없어 지은 첫 섹션 제목, 메모의 빈 칸, 메모에 없지만 사실일 수 있는 내용, 문체·섹션 선택 같은 결정
 - **홈 화면**: 이 글이 홈의 주차별 기록판에서 어떻게 보이는지(주제 = 첫 `##` 제목, `made`, `summary`, 대표 사진)도 함께 확인한다.
 - **미리 보기**: `hugo server --buildDrafts` → `http://localhost:1313/future-ai-kids/posts/YYYY-MM-DD-week-NN/`
-- **다음 단계**: (영상 없이 쓴 팀이 있으면) 영상 추가(`/weekly-post` 6단계), `privacy-reviewer`, 커밋·PR(`/weekly-post` 10~11단계)
+- **다음 단계**: (영상 없이 쓴 팀이 있으면) 영상 추가(`/weekly-post` 6단계), `privacy-reviewer`(`/weekly-post` 10단계), 사람이 미리 보기를 확인하면 `draft: false`로 바꿔 커밋·PR(11~12단계). PR은 한 번만 열고 머지하면 바로 발행된다
 
 사람이 고칠 점을 말하면 같은 흐름으로 반영한다. 고친 범위에 따라 2단계(다시 쓰기) 또는 바로 수정 → 3~6단계를 다시 거친다.
 
