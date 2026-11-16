@@ -1,7 +1,7 @@
 ---
-description: 수업 메모로 이번 주 기록 글 초안을 쓰고 개인정보 검토를 거쳐 PR을 연다
+description: 수업 메모로 이번 주 기록 글을 쓰고(/draft-post), 미리 보기 확인 뒤 draft false로 PR을 한 번 열고, 머지 뒤 발행을 확인한다
 argument-hint: "[수업 날짜 YYYY-MM-DD]"
-allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git branch:*), Bash(git switch:*), Bash(git checkout:*), Bash(git fetch:*), Bash(git pull:*), Bash(git add:*), Bash(git commit:*), Bash(git push:*), Bash(gh pr create:*), Bash(gh pr view:*), Bash(hugo:*), Bash(ls:*), Bash(cp:*), Bash(mkdir:*), Bash(file:*), Bash(ffprobe:*), Bash(./tools/privacy-check.sh:*), Bash(./tools/strip-metadata.sh:*), Bash(./tools/clip.sh:*)
+allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(git branch:*), Bash(git switch:*), Bash(git checkout:*), Bash(git fetch:*), Bash(git pull:*), Bash(git add:*), Bash(git commit:*), Bash(git push:*), Bash(gh pr create:*), Bash(gh pr view:*), Bash(hugo:*), Bash(ls:*), Bash(cp:*), Bash(mkdir:*), Bash(file:*), Bash(ffprobe:*), Bash(./tools/privacy-check.sh:*), Bash(./tools/strip-metadata.sh:*), Bash(./tools/clip.sh:*), Bash(./tools/frames.sh:*), Bash(./tools/humanize-body.sh:*), Bash(gh run list:*)
 ---
 
 # /weekly-post — 주간 수업 기록 글쓰기
@@ -51,112 +51,18 @@ git switch -c post/<팀 별칭 소문자>-week-NN   # 예: post/wanted-week-02
 hugo new content posts/YYYY-MM-DD-week-NN
 ```
 
-- `content/posts/YYYY-MM-DD-week-NN/index.md`가 `draft: true`로 생긴다. 미리 보기를 확인받을 때까지 `true`로 두고, 확인받으면 11단계에서 `false`로 바꾼다. 번들 아키타입이면 같은 폴더에 `naver.md`도 함께 생긴다.
+- `content/posts/YYYY-MM-DD-week-NN/index.md`가 `draft: true`로 생긴다. 미리 보기를 확인받을 때까지 `true`로 두고, 확인받으면 5단계에서 `false`로 바꾼다. 번들 아키타입이면 같은 폴더에 `naver.md`도 함께 생긴다.
 - front matter `date`는 수업 날짜(`YYYY-MM-DDT10:00:00+09:00` 꼴)로 고친다.
 
-## 4. 본문 쓰기 (`draft: true`) — `post-writer`
+## 4. 초안부터 검토까지 — `/draft-post`
 
-`Agent` 도구로 `post-writer` 서브 에이전트를 불러 `index.md` 초안을 맡긴다.
+`Skill` 도구로 `/draft-post YYYY-MM-DD`를 실행한다. 글을 쓰고 검토하는 규칙은 그 스킬에 한 곳으로 모여 있다.
 
-- 넘길 것: 수업 날짜, 주차 `NN`, 참여한 팀 `id` 목록, 메모 위치, 작업 `본문`, 글 폴더의 영상·사진 파일과 영상 프레임 위치(`_workspace/frames/` 등)
-- 게임 영상이 있으면 함께 지시한다.
-  - 팀 섹션의 게임 설명(어떻게 하는 게임인지, 화면에 나오는 문구)은 영상 프레임에서 확인한 것만 쓴다.
-  - 세션이 수업 뒤 녹화한 영상이면 「아래 영상은 수업이 끝난 뒤 지금의 게임을 플레이해 녹화한 화면이에요.」처럼 밝힌다. 학생이 플레이한 화면처럼 쓰지 않는다. 녹화한 쪽이 고른 행동(무기 선택 등)을 수업 내용처럼 쓰지 않는다.
-  - 제목(「N주차 · …」)과 `made`에는 게임 이름을 넣는다. (예: `Bsil: "게임 「등불 미로」"`)
-  - `cover.image`는 영상 프레임 jpg로, `cover.alt`에는 장면을 자세히 쓴다.
-- 에이전트는 메모의 실명을 `.private/roster.yaml`의 가명(「<가명>」)으로 바꾸고, 쉰 팀을 빼고, `summary`·`tags`를 채운다. 보고서에는 바꾼 종류와 개수만 온다.
-- 실명과 가명의 대응은 `.private/roster.yaml`에만 둔다. 글, 주석, 커밋 메시지, PR 본문, scratchpad 등 **다른 파일에는 쓰지 않는다.** 명단에 없는 학생이 메모에 나오면 사람에게 가명을 받아 명단과 `.private/names.txt`에 넣는다.
-- 보고서의 「확인이 필요한 점」(모호한 메모, 한마디가 없는 팀 등)은 사람에게 물어 정한 뒤 직접 고치거나 에이전트에 다시 맡긴다.
-- 받은 뒤 글을 직접 읽고, 메모 속 실명이 남지 않았는지 `Grep`으로 한 번 더 확인한다. (검색어는 대화 안에서만 쓰고 파일로 남기지 않는다)
+- 사진·영상(게임 영상이 없으면 `/record-game`으로 녹화), `post-writer` 초안, `/humanize-korean` 윤문(`tools/humanize-body.sh`), `tools/privacy-check.sh`, `fact-checker`, `content-reviewer`, `privacy-reviewer`를 차례로 거친다.
+- 네이버 요약본(`naver.md`)은 지금 중단 상태라 건너뛴다. 다시 운영하면 `post-writer`에 작업 `요약본`을 맡기고 `CLAUDE.md` 「네이버 블로그 요약본」 규칙을 따른다.
+- `/draft-post`가 사람에게 미리 보기를 보여 주면 5단계로 간다.
 
-## 5. 문체 다듬기 (`/humanize-korean`)
-
-`/humanize-korean` 스킬로 **본문만** 윤문해 AI 티를 없앤다.
-
-- 바꾸지 않는 것: front matter, shortcode(`{{< clip ... >}}` 등), 이미지·영상 경로, 링크, 팀 별칭, 가명 호칭, 해요체 문체, 제목(`##`) 구조
-- 윤문 뒤 `git diff`(새 파일이면 윤문 전 내용과 비교)로 위 항목이 그대로인지 확인하고, 깨졌으면 그 부분을 되돌린다.
-- 윤문 결과(`final.md`)를 본문에 옮긴 뒤 `grep -n "<!--" index.md`로 스킬의 `HUMANIZE-SUMMARY` 주석이 딸려 오지 않았는지 확인한다. 남아 있으면 지운다.
-- 스킬이 만드는 `_workspace/`는 커밋하지 않는다. (`.gitignore` 대상)
-
-## 6. 사진·영상 넣기
-
-참여 팀마다 게임 영상을 넣는다. 1단계에서 사람이 영상이 없다고 확인한 팀만 건너뛴다. 원본은 `notes/YYYY-MM-DD/media/`에만 두고 레포로 직접 옮기지 않는다.
-
-- **사진**: 쓸 사진만 글 폴더에 복사한 뒤 메타데이터를 지운다.
-  ```bash
-  cp notes/YYYY-MM-DD/media/<사진> content/posts/YYYY-MM-DD-week-NN/<영문-이름>.jpg
-  ./tools/strip-metadata.sh content/posts/YYYY-MM-DD-week-NN
-  ```
-  복사하기 전에 사진을 직접 열어 얼굴, 이름표, 교복·학교 로고, 화면 속 계정명·알림, 유리·모니터 반사가 없는지 본다. 있으면 쓰지 않는다.
-- **게임 영상 녹화**: `media/`에 게임 화면 녹화가 없으면 세션이 직접 녹화할 수 있다. (2026-10-31, 11-01, 11-07 글이 이 방법으로 만들어졌다)
-  1. 사람에게 그 주 수업 뒤 최신 게임의 AI 앱 링크(아티팩트 URL)나 HTML 파일을 받는다. 어느 버전인지(수업 끝난 시점인지) 확인한다.
-  2. 로컬 사본을 `_workspace/game/<team-id>/index.html`에 둔다. 자동 조작에 게임 상태가 필요하면 사본(`bot.html`)에만 읽기용 훅(예: `window.__g`)을 더한다. 게임 로직은 바꾸지 않는다.
-  3. `_workspace/rec/`의 녹화 스크립트(`rec.js` 참고, `playwright-core` — Apache-2.0, 이미 설치됨)로 headless Chrome에서 녹화한다. 로컬 사본만 연다. 게임이 원래 불러오는 CDN 라이브러리·웹 폰트(예: cdnjs의 three.js, Google Fonts) 말고는 외부 네트워크를 쓰지 않는다. 게임의 공유 저장소(랭킹 등)는 로컬 사본에서 연결되지 않는다. 새 의존성은 설치하지 않는다. 15~25초 안에 게임의 핵심 흐름(시작 → 플레이 → 클리어나 결과 화면)이 보이게 한다.
-  4. 녹화본을 `notes/YYYY-MM-DD/media/<team-id>-game.webm`으로 옮긴다.
-  5. 팀 메모(`<team-id>.md`, 요약만 있으면 그 파일)에 녹화 경위를 적는다. 「영상: media/<team-id>-game.webm — 사람 지시로 수업 뒤 AI 앱에 있던 최신 게임을 실행해 화면 녹화」처럼 적고, 녹화한 쪽이 고른 행동(무기·경로 선택 등)은 「수업 내용 아님」으로 따로 적는다. fact-checker가 이 기록으로 영상과 수업을 구분한다.
-  6. 프레임을 `_workspace/frames/`에 뽑아 직접 본다. 게임 속 얼굴이 사진인지 코드가 그린 캐릭터인지, 게임 파일에 사진이나 내장 이미지가 있는지 확인한다.
-- **영상**: `tools/clip.sh`로 쓸 장면만 잘라 결과물(mp4/gif/jpg)만 글 폴더에 만든다. 소리는 항상 제거된다.
-  ```bash
-  # 얼굴·이름표가 나올 수 있으면 먼저 한 프레임을 보고 좌표를 잡는다
-  ./tools/clip.sh notes/YYYY-MM-DD/media/<원본> <시작 mm:ss> <길이(초)> content/posts/YYYY-MM-DD-week-NN <이름> --preview
-  # 필요하면 남길 영역만 자르거나 고정 영역을 흐린다
-  ./tools/clip.sh notes/YYYY-MM-DD/media/<원본> <시작 mm:ss> <길이(초)> content/posts/YYYY-MM-DD-week-NN <이름> --crop W:H:X:Y --blur W:H:X:Y
-  ```
-  - 얼굴이 움직이며 나오는 장면은 blur로 가리지 말고 쓰지 않는다.
-  - 4초 이하 장면은 GIF, 그보다 길면 MP4를 쓴다.
-  - 화면 녹화는 `--crop`으로 게임 영역만 남긴다. 브라우저 UI, 계정 표시, 알림이 남지 않게 한다.
-  - `clip.sh`가 만든 첫 프레임 jpg는 포스터다. 대표 이미지로 더 나은 장면이 있으면 그 프레임을 jpg로 따로 만들고(`strip-metadata.sh` 적용) `cover`에 쓴다.
-- 클립을 자른 뒤에는 **결과물(mp4)에서 프레임을 다시 뽑아** 보고, 그 프레임을 `post-writer`·`fact-checker`에 넘긴다. 원본 녹화 프레임으로 쓰면 클립에 없는 장면(클리어 화면, 공격 장면 등)을 쓰게 된다. 글에 쓸 장면이 클립에 다 들어가는지 마지막 프레임까지 확인한다.
-- `tools/clip.sh`는 4초보다 긴 장면에는 gif를 만들지 않는다.
-- 본문에는 shortcode로 넣고, `alt`에는 장면을 설명하는 한국어 문장을 쓴다. (학생 이름 금지)
-  ```
-  {{< clip src="<이름>.mp4" alt="퀴즈 앱이 정답을 맞히면 점수가 올라가는 장면" >}}
-  ```
-- 대표 이미지가 있으면 front matter `cover.image`와 `cover.alt`를 채운다.
-
-## 7. 자동 개인정보 검사
-
-```bash
-./tools/privacy-check.sh content/posts/YYYY-MM-DD-week-NN
-```
-
-실패하면 출력된 해결 방법대로 고치고 통과할 때까지 다시 돌린다. 윤문이나 수정 뒤에도 다시 돌린다.
-
-## 8. 네이버 요약본 (`naver.md`)
-
-> **지금은 중단.** CLAUDE.md에 따라 이 단계는 건너뛴다.
-
-`post-writer`에 작업 `요약본`으로 `naver.md`를 맡긴다. (3단계에서 생기지 않았으면 에이전트가 만든다. 사이트 빌드에는 나오지 않는다)
-
-- 제목: GitHub 글과 같다.
-- 본문: 핵심 3~4줄(공통), 참여한 팀마다 「학생들의 한마디」 1개(메모에 있을 때만), 대표 이미지 1장 위치 표시(예: `[대표 이미지: <파일 이름>]`)
-- 마지막 줄: `전체 기록 보기 → https://smartjy.github.io/future-ai-kids/posts/<slug>/`
-- 전문을 복사하지 않는다. (유사 문서로 판단되면 네이버 노출이 줄어든다)
-- 쓴 뒤 `/humanize-korean`으로 윤문하고, 5단계와 같은 방법으로 링크·호칭·별칭이 그대로인지 확인한다. 그다음 7단계 검사를 다시 돌린다.
-
-## 9. `fact-checker`·`content-reviewer` 검토
-
-먼저 `Agent` 도구로 `fact-checker` 서브 에이전트를 불러 글의 문장이 실제 수업과 맞는지 검증받는다. 문장마다 메모(`notes/YYYY-MM-DD/`)와 원본 사진·영상에서 근거를 찾아 「근거 있음 / 근거 없음 / 메모와 다름 / 부풀림」으로 판정한다.
-
-- 넘길 것: 글 폴더 경로
-- 결과가 **수정 필요**면 근거가 없는 문장은 빼거나 근거가 허용하는 만큼으로 줄인다. 사실이지만 메모에 없는 내용이면 사람에게 확인받아 메모에 먼저 적은 뒤 다시 검증받는다.
-- 윤문(5단계)은 뜻을 바꿀 수 있으므로, 윤문 뒤에도 `fact-checker`를 거친다.
-
-그다음 `content-reviewer` 서브 에이전트를 불러 커밋 전 글 내용을 검토받는다. 구조, front matter, 팀 별칭·호칭, 메모와의 사실 일치, 톤, 미디어 참조, `naver.md` 형식, 빌드를 본다.
-
-- 넘길 것: 글 폴더 경로, 메모 위치
-- 결과가 **수정 필요**면 필수 수정을 고친다. 권장 수정은 사람에게 보여 주고 정한다. 고친 뒤 7단계 검사를 돌리고 다시 검토를 맡긴다.
-- 문장을 많이 고쳤으면 5단계 윤문을 다시 거친다.
-
-## 10. `privacy-reviewer` 검토
-
-`Agent` 도구로 `privacy-reviewer` 서브 에이전트를 부른다. 글을 쓴 이 세션과 분리된 눈으로 개인정보를 검토하게 하는 단계다.
-
-- 검토 대상: 이 브랜치에서 바뀐 파일(`git diff main --name-only`와 아직 커밋하지 않은 파일)
-- 실명 목록을 프롬프트로 넘기지 않는다. (에이전트가 `.private/`를 직접 읽는다)
-- 결과가 **차단**이면 보고된 파일·이유대로 고치고, 7단계 검사 후 다시 검토를 맡긴다. **통과**가 나올 때까지 다음 단계로 가지 않는다.
-
-## 11. 사람의 미리 보기 확인
+## 5. 사람의 미리 보기 확인
 
 사람에게 미리 보기 주소를 알려 주고 기다린다. (세션이 서버를 띄워도 된다)
 
@@ -165,10 +71,10 @@ hugo server --buildDrafts
 # http://localhost:1313/future-ai-kids/posts/YYYY-MM-DD-week-NN/
 ```
 
-- 고칠 점이 나오면 고치고, 고친 범위에 맞춰 다시 검토받는다. 문장을 고쳤으면 `fact-checker`, 문장을 많이 고쳤으면 윤문(5단계)과 `content-reviewer`, 사진·영상을 바꿨으면 `privacy-reviewer`를 다시 거친다. 그 뒤 다시 미리 보기를 확인받는다.
+- 고칠 점이 나오면 고치고, `/draft-post` 9단계 끝의 기준대로 고친 범위만큼 다시 검토받는다. (문장 → `fact-checker`, 많이 고치면 윤문·`content-reviewer`까지, 사진·영상 → `privacy-reviewer`) 그 뒤 다시 미리 보기를 확인받는다.
 - 사람이 확인하면 front matter를 `draft: false`로 바꾸고 `hugo --gc --minify --printPathWarnings`가 경고 없이 끝나는지 본다. **초안 PR과 발행 PR을 따로 두지 않는다.** PR은 한 번만 열고, 머지하면 바로 발행된다.
 
-## 12. 커밋하고 PR 열기
+## 6. 커밋하고 PR 열기
 
 ```bash
 git add content/posts/YYYY-MM-DD-week-NN
@@ -206,7 +112,7 @@ git commit -m "<팀 별칭> NN주차 수업 기록"
   ```
 - 개인정보 처리 내역에는 **바꾼 개수와 방식만** 쓰고 실명은 절대 쓰지 않는다.
 
-## 13. 머지와 발행 확인
+## 7. 머지와 발행 확인
 
 1. **머지는 리뷰어 승인을 받은 뒤 사람이 한다.** (회사 규칙: 리뷰어 승인을 받은 PR로만 반영) 머지 방식은 「Create a merge commit」. `main`에 직접 push하지 않고, force push하지 않는다. 머지하면 `draft: false`인 글이 바로 발행된다.
 2. PR을 연 뒤에 고칠 것이 생기면 **push하기 전에 `gh pr view <번호> --json state`로 PR이 아직 열려 있는지 본다.** 이미 머지됐으면 그 브랜치에 push해도 `main`에 반영되지 않는다. `main`에서 새 브랜치를 만들어 고친 커밋을 옮기고(`git cherry-pick`) 새 PR을 연다. push한 뒤에는 `gh pr view <번호> --json commits`로 커밋이 PR에 들어갔는지 확인하고 나서 사람에게 머지를 부탁한다.

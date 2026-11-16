@@ -56,8 +56,8 @@
 - `naver.md`도 작성 직후와 네이버 업로드 직전에 `/humanize-korean`을 실행한다.
 
 ## 주간 글쓰기 (/weekly-post)
-- 매주 글은 `/weekly-post [YYYY-MM-DD]`로 쓴다. 자세한 단계는 `.claude/commands/weekly-post.md`에 있다.
-- 흐름: 날짜·참여 팀·메모 확인 → `main`에서 `post/<팀 별칭 소문자>-week-NN` 브랜치(예: `post/wanted-week-02`) → `hugo new content` → 본문 초안(`post-writer`) → `/humanize-korean` → 사진(`tools/strip-metadata.sh`)·영상(`tools/clip.sh`) → `tools/privacy-check.sh` → `naver.md`(`post-writer`) → `fact-checker` → `content-reviewer` → `privacy-reviewer` → `/security-audit` → 사람 확인 후 push·PR
+- 매주 글은 `/weekly-post [YYYY-MM-DD]`로 쓴다. 브랜치·PR·발행은 `.claude/commands/weekly-post.md`, 글을 쓰고 검토하는 단계는 `.claude/skills/draft-post/SKILL.md`, 게임 녹화는 `.claude/skills/record-game/SKILL.md`에 있다.
+- 흐름: 날짜·참여 팀·메모 확인 → `main`에서 `post/<팀 별칭 소문자>-week-NN` 브랜치(예: `post/wanted-week-02`) → `hugo new content` → `/draft-post`(사진·영상 — 없으면 `/record-game`으로 녹화 → `post-writer` 초안 → `/humanize-korean`(`tools/humanize-body.sh`) → `tools/privacy-check.sh` → `fact-checker` → `content-reviewer` → `privacy-reviewer`) → 사람 미리 보기 → `draft: false` → `/security-audit` → push·PR 한 번 → 사람이 머지 → 발행 확인
 - 메모는 `notes/YYYY-MM-DD/` 폴더에 `class.md`(공통: 강의 주제, 수업 흐름, 다음 주 예고)와 팀마다 `<team-id>.md`(예: `team1.md`)로 둔다. 쉰 팀은 파일을 만들지 않는다. 미디어 원본은 `notes/YYYY-MM-DD/media/`에 두고 파일 이름 앞에 팀 id(공통이면 `class-`)를 붙인다. 메모 예시는 `notes.example/2026-10-24/`에 있다.
 - 실명과 가명의 대응은 `.private/roster.yaml`에만 둔다. 다른 파일(글, 주석, scratchpad, 커밋 메시지, PR 본문)에는 남기지 않는다.
 - 윤문과 `fact-checker`·`content-reviewer`·`privacy-reviewer`를 거친 뒤 사람이 `hugo server --buildDrafts`로 미리 보기를 확인한다. 확인하면 `draft: false`로 바꿔 PR을 열고, 사람이 머지하면 바로 발행된다. 미리 보기 뒤 고친 곳이 있으면 고친 범위만큼 다시 검토받는다.
