@@ -26,13 +26,13 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), 
   ```sh
   hugo new content posts/YYYY-MM-DD-week-NN
   ```
-- **영상 만들기**: 초안을 맡기기 전에 게임 영상을 `/weekly-post` 6단계대로 글 폴더에 만든다. 녹화본이 없으면 6단계 「게임 영상 녹화」대로 AI 앱의 게임을 받아 세션이 직접 녹화하고, 녹화 경위를 팀 메모에 적는다. `post-writer`에는 `/weekly-post` 4단계의 영상 관련 지시(수업 뒤 녹화임을 밝히기, 게임 설명은 프레임 근거, 제목·`made`에 게임 이름, 프레임 `cover`)를 함께 넘긴다. (`tools/clip.sh --preview`로 프레임을 먼저 보고 얼굴·이름표·계정명·반사를 확인한다. 4초 이하는 GIF, 길면 MP4, 소리는 항상 뺀다) 대표 이미지로 쓸 jpg도 함께 만든다. 이렇게 해야 `post-writer`가 팀 섹션에 `clip` shortcode와 `cover`를 넣는다.
+- **영상 만들기**: 초안을 맡기기 전에 게임 영상을 `/weekly-post` 6단계대로 글 폴더에 만든다. 녹화본이 없으면 6단계 「게임 영상 녹화」대로 AI 앱의 게임을 받아 세션이 직접 녹화하고, 녹화 경위를 팀 메모에 적는다. 자른 클립에서 프레임을 다시 뽑아 넘긴다. (원본 녹화 프레임이 아니다) `post-writer`에는 `/weekly-post` 4단계의 영상 관련 지시(수업 뒤 녹화임을 밝히기, 게임 설명은 프레임 근거, 제목·`made`에 게임 이름, 프레임 `cover`)를 함께 넘긴다. (`tools/clip.sh --preview`로 프레임을 먼저 보고 얼굴·이름표·계정명·반사를 확인한다. 4초 이하는 GIF, 길면 MP4, 소리는 항상 뺀다) 대표 이미지로 쓸 jpg도 함께 만든다. 이렇게 해야 `post-writer`가 팀 섹션에 `clip` shortcode와 `cover`를 넣는다.
 
 ## 2. 초안 — `post-writer`
 
 > 네이버 블로그는 지금 중단 상태다. 작업은 `본문`으로만 맡기고 `naver.md`는 다루지 않는다.
 
-`Agent` 도구로 `post-writer`를 부른다. 작업은 `둘 다`(index.md + naver.md).
+`Agent` 도구로 `post-writer`를 부른다. 작업은 `본문`(index.md). 네이버 운영을 다시 하면 `둘 다`(index.md + naver.md)로 맡긴다.
 
 - 넘길 것: 수업 날짜, 주차, 글 폴더, 참여 팀 `id`, 메모 경로, 글 폴더에 있는 미디어 파일, 사람이 이번에 따로 말한 요청
 - 실명 목록을 프롬프트에 넣지 않는다. (에이전트가 `.private/`를 직접 읽는다)
@@ -42,6 +42,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Skill, Agent, Bash(git status:*), 
 
 `Skill` 도구로 `humanize-korean`을 실행해 `index.md` 본문과 `naver.md`를 윤문한다.
 
+- 윤문 결과를 본문에 옮긴 뒤 `HUMANIZE-SUMMARY` 같은 HTML 주석(`<!--`)이 남지 않았는지 확인한다.
 - 바꾸지 않는 것: front matter, shortcode, 이미지·영상 경로, 링크, 팀 별칭, 가명 호칭, 해요체 문체, 제목(`##`) 구조, `naver.md` 마지막 링크 줄
 - 윤문 전 내용과 비교해 위 항목이 깨졌으면 그 부분을 되돌린다.
 - 윤문은 문체(register)를 보존한다. 문체를 바꾸고 싶으면 윤문이 아니라 초안(2단계)에서 바꾼다.
@@ -78,9 +79,9 @@ hugo --gc --minify --printPathWarnings --buildDrafts --destination "$(mktemp -d)
 
 - **파일 위치**: `content/posts/YYYY-MM-DD-week-NN/index.md`(본문), `naver.md`(네이버 요약본), 쓴 미디어 파일
 - **본문**: 섹션별 내용. 짧으면 전문, 길면 섹션마다 두세 줄 요약
-- **naver.md 전문**
+- **naver.md 전문** (네이버 중단 중에는 생략)
 - **검증 결과**: fact-checker(판정 개수, 고친 문장 전·후), content-reviewer(고친 것, 남은 권장 수정), privacy-check, 빌드
-- **사람이 정할 것**: 메모의 빈 칸, 메모에 없지만 사실일 수 있는 내용, 문체·섹션 선택 같은 결정
+- **사람이 정할 것**: `class.md`가 없어 지은 첫 섹션 제목, 메모의 빈 칸, 메모에 없지만 사실일 수 있는 내용, 문체·섹션 선택 같은 결정
 - **홈 화면**: 이 글이 홈의 주차별 기록판에서 어떻게 보이는지(주제 = 첫 `##` 제목, `made`, `summary`, 대표 사진)도 함께 확인한다.
 - **미리 보기**: `hugo server --buildDrafts` → `http://localhost:1313/future-ai-kids/posts/YYYY-MM-DD-week-NN/`
 - **다음 단계**: (영상 없이 쓴 팀이 있으면) 영상 추가(`/weekly-post` 6단계), `privacy-reviewer`, 커밋·PR(`/weekly-post` 10~11단계)
